@@ -1,0 +1,48 @@
+.board {
+    display: grid;
+    grid-template-columns: [first-cell] 1fr repeat(6, 1fr) [last-cell] 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    background-color: #4F3824;
+    height: 20vw;
+    width: 55vw;
+    -webkit-border-radius: 1em;
+    -moz-border-radius: 1em;
+    border-radius: 1em;
+    margin: auto;
+}
+
+.cavity {
+    margin: 10%;
+    -webkit-border-radius: 3em;
+    -moz-border-radius: 3em;
+    border-radius: 3em;
+    background-color: rgba(1,1,1,1);
+}
+
+.c-small {
+    --background-color: #F1DEDE;
+}
+
+.c-big {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    --background-color: #F1DEDE;
+}
+
+.c-left {
+    grid-column-start: first-cell;
+}
+
+.c-right {
+    grid-column-start: last-cell;
+}
+
+.seed {
+    width: 2em; 
+    height: 2.5em;
+    border-radius: 50%;
+    background: red;
+    transform: rotate(35deg) scaleY(.4);
+    -moz-transform: rotate(35deg) scaleY(.4) ;
+    -webkit-transform: rotate(35deg) scaleY(.4);
+}
