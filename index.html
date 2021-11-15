@@ -13,7 +13,7 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img class="logo-img" src="img/logo_verde.svg" alt="Mancala">
+            <img class="logo-img" src="img/logo_castanho.svg" alt="Mancala">
         </div>
         <a href="#" class="toggle-button">
             <span class="bar"></span>
@@ -23,7 +23,7 @@
         <div class="navbar-links">
             <ul>
                 <li><a href="#" class="rules-button">Rules</a></li>
-                <li><a href="#">Leaderboard</a></li>
+                <li><a href="#" class="ldb-button">Leaderboard</a></li>
                 <li><a href="#">Sign In</a></li>
             </ul>
         </div>
@@ -46,12 +46,21 @@
         <div class="cavity c-small"></div>
     </div>-->
     <!--<div class="seed"></div>-->
-    <div class="pop-up-container rules-container">
+    <div class="full-pop-up-container rules-container">
         <div class="background-overlay background-rules"></div>
-        <div class="rules">
+        <div class="pop-up-container rules">
             <a href="#" class="close close-rules"></a>
-            <h2 class="rules-main-title">Rules</h2>
-            <iframe class="rules-wrapper" src="rules.html" seamless></iframe>
+            <h2 class="pop-up-main-title">Rules</h2>
+            <iframe class="pop-up-wrapper" src="rules.html" seamless></iframe>
+        </div>
+    </div>
+
+    <div class="full-pop-up-container ldb-container">
+        <div class="background-overlay background-ldb"></div>
+        <div class="pop-up-container ldb">
+            <a href="#" class="close close-ldb"></a>
+            <h2 class="pop-up-main-title">Leaderboard</h2>
+            <iframe class="pop-up-wrapper" src="ldb.html" seamless></iframe>
         </div>
     </div>
 </body>
