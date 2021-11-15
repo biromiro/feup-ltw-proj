@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +9,7 @@
     <script src="script.js" defer></script>
     <title>Document</title>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="logo">
@@ -20,7 +22,7 @@
         </a>
         <div class="navbar-links">
             <ul>
-                <li><a href="">Rules</a></li>
+                <li class="rules-button" onclick="toggle_visibility('ruleset');"><a href="">Rules</a></li>
                 <li><a href="">Leaderboard</a></li>
                 <li><a href="">Sign In</a></li>
             </ul>
@@ -44,8 +46,10 @@
         <div class="cavity c-small"></div>
     </div>
     <!--<div class="seed"></div>-->
-    <div class="configs">
-
+    <div class="rules">
+        <h2 class="rules-main-title">Rules</h2>
+        <iframe class="rules-wrapper" src="rules.html" seamless></iframe>
     </div>
 </body>
+
 </html>

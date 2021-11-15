@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Romanesco&display=swap');
 
-:root { 
+:root {
     --main-color: #69B578;
     --main-text-color: #4F3824;
     --main-bg-color: #F1DEDE;
@@ -15,7 +15,7 @@
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 /* Remove default margin */
@@ -29,39 +29,39 @@ figure,
 blockquote,
 dl,
 dd {
-  margin: 0;
-  font-family: 'Alegreya', serif;
-  background-color: var(--alt-bg-color);
+    margin: 0;
+    font-family: 'Alegreya', serif;
+    background-color: var(--alt-bg-color);
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
 ul[role='list'],
 ol[role='list'] {
-  list-style: none;
+    list-style: none;
 }
 
 /* Set core root defaults */
 html:focus-within {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 /* Set core body defaults */
 body {
-  min-height: 100vh;
-  text-rendering: optimizeSpeed;
-  line-height: 1.5;
+    min-height: 100vh;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
 }
 
 /* A elements that don't have a class get default styles */
 a:not([class]) {
-  text-decoration-skip-ink: auto;
+    text-decoration-skip-ink: auto;
 }
 
 /* Make images easier to work with */
 img,
 picture {
-  max-width: 100%;
-  display: block;
+    max-width: 100%;
+    display: block;
 }
 
 /* Inherit fonts for inputs and buttons */
@@ -69,23 +69,44 @@ input,
 button,
 textarea,
 select {
-  font: inherit;
+    font: inherit;
 }
 
 /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
 @media (prefers-reduced-motion: reduce) {
-  html:focus-within {
-   scroll-behavior: auto;
-  }
-  
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+    html:focus-within {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* This will work on Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--main-color) var(--whitened-bg-color);
+}
+
+/* Targtes on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--whitened-bg-color);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--main-color);
+    border-radius: 20px;
+    border: 3px solid var(--whitened-bg-color);
 }
 
 .navbar {
@@ -127,7 +148,7 @@ select {
 
 .logo {
     margin: 1rem;
-    
+
 }
 
 .logo-img {
@@ -151,42 +172,6 @@ select {
     width: 100%;
     background-color: var(--main-text-color);
     border-radius: 10px;
-}
-
-@media (max-width: 600px) {
-    .toggle-button {
-        display: flex;
-    }
-
-    .navbar-links {
-        display: none;
-        width: 100%;
-        margin: 0%;
-        width:100%;
-    }
-
-    .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .navbar-links ul {
-        width: 100%;
-        flex-direction: column;
-    }
-
-    .navbar-links li {
-        text-align: center;
-        border-radius: 0%;
-    }
-
-    .navbar-links li a {
-        padding: .5rem 1rem;
-    }
-
-    .navbar-links.active {
-        display: flex;
-    }
 }
 
 .board {
@@ -231,11 +216,102 @@ select {
 }
 
 .seed {
-    width: 2em; 
+    width: 2em;
     height: 2.5em;
     border-radius: 50%;
     background: var(--main-color);
     transform: rotate(35deg) scaleY(.4);
-    -moz-transform: rotate(35deg) scaleY(.4) ;
+    -moz-transform: rotate(35deg) scaleY(.4);
     -webkit-transform: rotate(35deg) scaleY(.4);
+}
+
+.rules {
+    background-color: var(--main-bg-color);
+    position: absolute;
+    left: 20%;
+    top: 20%;
+    width: 60%;
+    height: 70%;
+    border-radius: 50px;
+}
+
+.rules-main-title {
+    overflow: hidden;
+    background-color: var(--main-bg-color);
+    color: var(--main-color);
+    background-color: transparent;
+    font-family: 'Romanesco', cursive;
+    font-size: 4rem;
+    text-align: center;
+    min-height: 4.5rem;
+    height: 4rem;
+    z-index: 99;
+}
+
+.rules-wrapper {
+    border: none;
+    overflow: hidden;
+    margin: 0% 5%;
+    margin: 0% 5%;
+    width: 92%;
+    padding-top: 2%;
+    height: 82%;
+}
+
+.rules-text,
+.rules-title,
+.rules-subtitle,
+.rules-paragraph {
+    background-color: var(--main-bg-color);
+}
+
+.rules-text {
+    padding: 2%;
+}
+
+@media (max-width: 600px) {
+    .toggle-button {
+        display: flex;
+    }
+
+    .navbar-links {
+        display: none;
+        width: 100%;
+        margin: 0%;
+        width: 100%;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-links ul {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .navbar-links li {
+        text-align: center;
+        border-radius: 0%;
+    }
+
+    .navbar-links li a {
+        padding: .5rem 1rem;
+    }
+
+    .navbar-links.active {
+        display: flex;
+    }
+
+    .rules {
+        left: 10%;
+        width: 80%;
+    }
+}
+
+@media (max-height: 700px) {
+    .rules-wrapper {
+        border-radius: 5%;
+    }
 }
