@@ -22,14 +22,14 @@
         </a>
         <div class="navbar-links">
             <ul>
-                <li class="rules-button" onclick="toggle_visibility('ruleset');"><a href="">Rules</a></li>
-                <li><a href="">Leaderboard</a></li>
-                <li><a href="">Sign In</a></li>
+                <li><a href="#" class="rules-button">Rules</a></li>
+                <li><a href="#">Leaderboard</a></li>
+                <li><a href="#">Sign In</a></li>
             </ul>
         </div>
 
     </nav>
-    <div class="board">
+    <!--<div class="board">
         <div class="cavity c-big c-left"></div>
         <div class="cavity c-small"></div>
         <div class="cavity c-small"></div>
@@ -44,11 +44,15 @@
         <div class="cavity c-small"></div>
         <div class="cavity c-small"></div>
         <div class="cavity c-small"></div>
-    </div>
+    </div>-->
     <!--<div class="seed"></div>-->
-    <div class="rules">
-        <h2 class="rules-main-title">Rules</h2>
-        <iframe class="rules-wrapper" src="rules.html" seamless></iframe>
+    <div class="pop-up-container rules-container">
+        <div class="background-overlay background-rules"></div>
+        <div class="rules">
+            <a href="#" class="close close-rules"></a>
+            <h2 class="rules-main-title">Rules</h2>
+            <iframe class="rules-wrapper" src="rules.html" seamless></iframe>
+        </div>
     </div>
 </body>
 
