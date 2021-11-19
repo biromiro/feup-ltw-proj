@@ -9,6 +9,7 @@
     --alt-bg-color: #98c7a1;
     --cavity-color: #ecb07c;
     --board-bg-color: #9c6535;
+    --bronze: #CD7F32;
 }
 
 /* Box sizing rules */
@@ -31,6 +32,9 @@ dl,
 dd {
     margin: 0;
     font-family: 'Alegreya', serif;
+}
+
+body {
     background-color: var(--alt-bg-color);
 }
 
@@ -212,7 +216,7 @@ select {
     grid-template-rows: repeat(2, 1fr);
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url("img/mockup-photos-5nUNdLueQio-unsplash.jpg");
+    background-image: url("img/jean-wimmerlin-dcasj22jmCk-unsplash.jpg");
     background-color: var(--board-bg-color);
     height: 20vw;
     width: 55vw;
@@ -228,10 +232,11 @@ select {
     -moz-border-radius: 3em;
     border-radius: 3em;
     background-repeat: no-repeat;
-    filter: brightness(0.6);
-    background-size: cover;
-    background-image: url("img/mockup-photos-5nUNdLueQio-unsplash.jpg");
-    background-color: var(--cavity-color);
+    background-color: rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: inset 0 0 2rem #000000;
+    -webkit-box-shadow: inset 0 0 2rem #000000;
+    box-shadow: inset 0 0 2rem #000000;
+    border: 2px solid var(--cavity-color);
 }
 
 .c-big {
@@ -252,9 +257,9 @@ select {
     height: 2.5em;
     border-radius: 50%;
     background: var(--main-color);
-    transform: rotate(35deg) scaleY(.4);
+    /*transform: rotate(35deg) scaleY(.4);
     -moz-transform: rotate(35deg) scaleY(.4);
-    -webkit-transform: rotate(35deg) scaleY(.4);
+    -webkit-transform: rotate(35deg) scaleY(.4);*/
 }
 
 .full-pop-up-container {
@@ -345,7 +350,7 @@ select {
 
 .pop-up-wrapper {
     border: none;
-    overflow-y: scroll;
+    overflow-y: auto;
     margin: 0% 5%;
     width: 92%;
     padding: 2%;
@@ -360,7 +365,50 @@ select {
     background-color: var(--main-bg-color);
 }
 
+.ldb-content {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    color: var(--main-text-color);
+}
 
+table td {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+table tr>* {
+    text-align: center;
+}
+
+table tr>*:nth-child(1) {
+    text-align: left;
+}
+
+table tr>*:nth-child(2) {
+    border-radius: 20px;
+    padding: 0.1rem 0.5rem;
+    display: inline-block;
+}
+
+table *:nth-child(2)>*:nth-child(2) {
+    background-color: gold;
+}
+
+table *:nth-child(3)>*:nth-child(2) {
+    background-color: silver;
+}
+
+table *:nth-child(4)>*:nth-child(2) {
+    background-color: var(--bronze);
+}
+
+table th {
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: lighter;
+    letter-spacing: 0.04rem;
+}
 
 @media (max-width: 600px) {
     .toggle-button {
