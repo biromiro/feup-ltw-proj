@@ -260,11 +260,8 @@ select {
 .full-pop-up-container {
     display: none;
     background-color: transparent;
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .rules-container.active,
@@ -322,13 +319,12 @@ select {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-color: rgba(79, 56, 36, 0.4);
 }
 
 .pop-up-container {
-    position: relative;
     background-color: var(--main-bg-color);
     position: absolute;
     left: 20%;
@@ -340,25 +336,20 @@ select {
 
 .pop-up-main-title {
     overflow: hidden;
-    background-color: var(--main-bg-color);
     color: var(--main-color);
     background-color: transparent;
     font-family: 'Romanesco', cursive;
-    font-size: 4rem;
     text-align: center;
-    min-height: 4.5rem;
-    height: 4rem;
-    z-index: 99;
+    font-size: 8vmin;
 }
 
 .pop-up-wrapper {
     border: none;
-    overflow: hidden;
-    margin: 0% 5%;
+    overflow-y: scroll;
     margin: 0% 5%;
     width: 92%;
-    padding-top: 2%;
-    height: 82%;
+    padding: 2%;
+    height: 75%;
 }
 
 .rules-body,
@@ -369,9 +360,7 @@ select {
     background-color: var(--main-bg-color);
 }
 
-.rules-text {
-    padding: 2%;
-}
+
 
 @media (max-width: 600px) {
     .toggle-button {
@@ -411,11 +400,5 @@ select {
     .pop-up-container {
         left: 10%;
         width: 80%;
-    }
-}
-
-@media (max-height: 700px) {
-    .pop-up-wrapper {
-        height: 350px;
     }
 }
