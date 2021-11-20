@@ -32,7 +32,6 @@ dl,
 dd {
     margin: 0;
     font-family: 'Alegreya', serif;
-    overflow: hidden;
 }
 
 body {
@@ -339,6 +338,7 @@ select {
     width: 60%;
     height: 70%;
     border-radius: 50px;
+    overflow-y: auto;
 }
 
 .pop-up-main-title {
@@ -389,11 +389,8 @@ table tr>*:nth-child(1) {
 }
 
 table tr>*:nth-child(2) {
-    display: flex;
     border-radius: 20px;
     padding: 0.1rem 0.5rem;
-    align-items: center;
-    justify-content: center;
 }
 
 table *:nth-child(2)>*:nth-child(2) {
@@ -418,6 +415,7 @@ table th {
 .signin {
     display: flex;
     justify-content: space-evenly;
+    height: 100%;
 }
 
 .signin-filler {
@@ -452,14 +450,6 @@ table th {
 
 .signin-input {
     padding: 0% 10% 10% 10%;
-}
-
-.signin-uname-pwd>input {
-    width: 80%;
-}
-
-.submit-button {
-    width: 50%;
 }
 
 .custom-field {
@@ -517,20 +507,59 @@ table th {
     justify-content: center;
 }
 
-.submit-button {
-    background-color: var(--main-color);
+.button {
     border-radius: 10px;
     border: none;
-    color: white;
     width: 50%;
     margin: 1em 0em;
     padding: 0.5em 0em;
     transition: background-color 0.5s ease;
 }
 
+.button:hover {
+    cursor: pointer;
+}
+
+.submit-button {
+    background-color: var(--main-color);
+    color: white;
+}
+
 .submit-button:hover {
     background-color: var(--alt-bg-color);
-    cursor: pointer;
+}
+
+.close-button {
+    background-color: rgb(143, 19, 19);
+    color: white;
+}
+
+.close-button:hover {
+    background-color: rgb(185, 56, 56);
+}
+
+.profile {
+    display: flex;
+    flex-flow: wrap;
+    font-size: 3vh;
+    aspect-ratio: 1/1;
+    justify-items: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+}
+
+.profile h2,
+.profile div {
+    width: 100%;
+}
+
+.profile-buttons-container {
+    display: flex;
+}
+
+.profile-buttons-container>button {
+    margin: 1rem;
 }
 
 @media (max-width: 600px) {
@@ -584,5 +613,25 @@ table th {
     .pop-up-container {
         left: 10%;
         width: 80%;
+    }
+}
+
+@media (max-width: 750px) {
+    .signin {
+        display: flex;
+        flex-flow: wrap;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .signin-input {
+        padding-bottom: 0;
+    }
+
+    .signin-filler {
+        width: 80%;
+        height: 2px;
+        margin: 5%;
     }
 }
