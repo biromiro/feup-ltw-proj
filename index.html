@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <script src="popups.js" defer></script>
     <title>Document</title>
 </head>
 
@@ -24,7 +24,7 @@
             <ul>
                 <li><a href="#" class="rules-button">Rules</a></li>
                 <li><a href="#" class="ldb-button">Leaderboard</a></li>
-                <li><a href="#">Sign In</a></li>
+                <li><a href="#" class="signin-button">Sign In</a></li>
             </ul>
         </div>
 
@@ -184,6 +184,56 @@
             </div>
         </div>
     </div>
+
+    <div class="full-pop-up-container signin-container">
+        <div class="background-overlay background-signin"></div>
+        <div class="pop-up-container signin">
+            <a href="#" class="close close-signin"></a>
+            <div class="signin-component login-component">
+                <h2 class="pop-up-main-title">Log-In</h2>
+                <div class="signin-input login-input">
+                    <div class="signin-uname-pwd">
+                        <label class="custom-field">
+                            <input type="text" required />
+                            <label for="username" class="placeholder">Username</label>
+                        </label>
+                        <label class="custom-field">
+                            <input type="password" required />
+                            <label for="password" class="placeholder">Password</label>
+                        </label>
+                    </div>
+                    <div class="signin-buttons-container">
+                        <button type="submit" class="submit-button">Come on in!</button>
+                    </div>
+                </div>
+            </div>
+            <div class="signin-filler"></div>
+            <div class="signin-component signup-component">
+                <h2 class="pop-up-main-title">Sign-Up</h2>
+                <div class="signin-input signup-input">
+                    <div class="signin-uname-pwd">
+                        <label class="custom-field">
+                            <input type="text" required />
+                            <label for="text" class="placeholder">E-mail</label>
+                        </label>
+                        <label class="custom-field">
+                            <input type="text" required />
+                            <label for="username" class="placeholder">Username</label>
+                        </label>
+                        <label class="custom-field">
+                            <input type="password" required />
+                            <label for="password" class="placeholder">Password</label>
+                        </label>
+                    </div>
+                    <div class="signin-buttons-container">
+                        <button type="submit" class="submit-button">Come on in!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
 </body>
 
 </html>

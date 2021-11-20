@@ -32,6 +32,7 @@ dl,
 dd {
     margin: 0;
     font-family: 'Alegreya', serif;
+    overflow: hidden;
 }
 
 body {
@@ -270,7 +271,8 @@ select {
 }
 
 .rules-container.active,
-.ldb-container.active {
+.ldb-container.active,
+.signin-container.active {
     display: block;
 }
 
@@ -340,7 +342,6 @@ select {
 }
 
 .pop-up-main-title {
-    overflow: hidden;
     color: var(--main-color);
     background-color: transparent;
     font-family: 'Romanesco', cursive;
@@ -351,6 +352,7 @@ select {
 .pop-up-wrapper {
     border: none;
     overflow-y: auto;
+    overflow-x: hidden;
     margin: 0% 5%;
     width: 92%;
     padding: 2%;
@@ -383,12 +385,15 @@ table tr>* {
 
 table tr>*:nth-child(1) {
     text-align: left;
+    width: 50%;
 }
 
 table tr>*:nth-child(2) {
+    display: flex;
     border-radius: 20px;
     padding: 0.1rem 0.5rem;
-    display: inline-block;
+    align-items: center;
+    justify-content: center;
 }
 
 table *:nth-child(2)>*:nth-child(2) {
@@ -408,6 +413,124 @@ table th {
     text-transform: uppercase;
     font-weight: lighter;
     letter-spacing: 0.04rem;
+}
+
+.signin {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.signin-filler {
+    width: 5px;
+    background-color: var(--main-text-color);
+    margin: 10% 0%;
+}
+
+.signin-component,
+.signin-input,
+.signin-uname-pwd {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-shrink: 1;
+}
+
+.signin-input {
+    align-items: flex-start;
+}
+
+.signin-component>h2,
+.signin-component>div,
+.signin-input>div,
+.signin-input>button {
+    flex: 1 0 auto;
+    height: auto;
+}
+
+.signin-input {
+    padding: 0% 10% 10% 10%;
+}
+
+.signin-uname-pwd>input {
+    width: 80%;
+}
+
+.submit-button {
+    width: 50%;
+}
+
+.custom-field {
+    font-size: 1rem;
+    position: relative;
+}
+
+.custom-field input {
+    margin: 0.6rem;
+    padding: 0.2rem;
+    border: none;
+    appearance: none;
+    font-size: 1rem;
+    border-radius: 10px;
+    outline: none;
+    background: white;
+    border: 2px solid white;
+    transition:
+        border-color 0.3s ease,
+        background 0.5s ease;
+}
+
+.custom-field .placeholder {
+    position: absolute;
+    left: 16px;
+    bottom: 50%;
+    top: 14px;
+    width: calc(100% - 24px);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: gray;
+    transition:
+        top 0.3s ease,
+        font-size 0.3s ease,
+        color 0.3s ease;
+}
+
+.custom-field input:focus,
+.custom-field input:valid {
+    border-color: var(--main-text-color);
+    transition-delay: 0.25s;
+}
+
+.custom-field input:focus+.placeholder,
+.custom-field input:valid+.placeholder {
+    top: -10px;
+    font-size: 0.8rem;
+    color: var(--main-text-color);
+}
+
+.signin-buttons-container {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.submit-button {
+    background-color: var(--main-color);
+    border-radius: 10px;
+    border: none;
+    color: white;
+    width: 50%;
+    margin: 1em 0em;
+    padding: 0.5em 0em;
+    transition: background-color 0.5s ease;
+}
+
+.submit-button:hover {
+    background-color: var(--alt-bg-color);
+    cursor: pointer;
 }
 
 @media (max-width: 600px) {
@@ -443,6 +566,19 @@ table th {
 
     .navbar-links.active {
         display: flex;
+        animation: slidein 0.5s ease forwards;
+    }
+
+    @keyframes slidein {
+        from {
+            margin-left: 100%;
+            width: 300%;
+        }
+
+        to {
+            margin-left: 0%;
+            width: 100%;
+        }
     }
 
     .pop-up-container {
