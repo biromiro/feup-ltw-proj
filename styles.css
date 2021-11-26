@@ -10,6 +10,7 @@
     --cavity-color: #ecb07c;
     --board-bg-color: #9c6535;
     --bronze: #CD7F32;
+    --nCavities: 6
 }
 
 /* Box sizing rules */
@@ -212,7 +213,7 @@ select {
 
 .board {
     display: grid;
-    grid-template-columns: [first-cell] 1fr repeat(6, 1fr) [last-cell] 1fr;
+    grid-template-columns: [first-cell] 1fr repeat(var(--nCavities), 1fr) [last-cell] 1fr;
     grid-template-rows: repeat(2, 1fr);
     background-repeat: no-repeat;
     background-size: cover;
