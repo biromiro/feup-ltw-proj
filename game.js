@@ -164,6 +164,6 @@ class Seed
     }
 }
 
-const body = document.getElementsByTagName('body')[0];
-const board = new Board(body, 6, 2);
+const gameArea = document.getElementsByClassName('board-area')[0];
+const board = new Board(gameArea, 6, 2);
 board.genDisplay();
