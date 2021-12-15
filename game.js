@@ -51,17 +51,25 @@ class Seed
     {
         this.cavity = cavity
 
-        const x = Math.random() * 200
-        const y = Math.random() * 300
-        const degs = Math.random() * 360
-        const scale = '.4'
+        const width = this.cavity.element.offsetWidth
+        const height = this.cavity.element.offsetHeight
         
+        console.log(width)
+        console.log(height)
+        const xOffset = width / 8
+        const yOffset = height / 8
+        const x = Math.random() * width*1.5 + xOffset
+        const y = Math.random() * height*1.5 + yOffset
+        const degs = Math.random() * 360
+        const scaleX = 0.005 * width 
+        const scaleY = 0.006 * height
+
         this.element = document.createElement('div')
         this.element.className = 'seed'
-        this.element.style.transform = `translate(${x}%, ${y}%) rotate(${degs}deg) scaleY(${scale})`
+        this.element.style.transform = `translate(${x}%, ${y}%) rotate(${degs}deg) scaleY(${scaleY}) scaleX(${scaleX})`
         this.cavity.element.appendChild(this.element)
     }
 }
 
 const body = document.getElementsByTagName('body')[0]
-const board = new Board(body, 6, 1)
+const board = new Board(body, 6, 2)
