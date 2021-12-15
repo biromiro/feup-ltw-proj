@@ -186,12 +186,12 @@
                     <div class="signin-input login-input">
                         <div class="signin-uname-pwd">
                             <label class="custom-field">
-                                <input type="text" required />
-                                <label for="username" class="placeholder">Username</label>
+                                <input id="username-login" type="text" required />
+                                <label for="username-login" class="placeholder">Username</label>
                             </label>
                             <label class="custom-field">
-                                <input type="password" required />
-                                <label for="password" class="placeholder">Password</label>
+                                <input id="password-login" type="password" required />
+                                <label for="password-login" class="placeholder">Password</label>
                             </label>
                         </div>
                         <div class="signin-buttons-container">
@@ -205,16 +205,16 @@
                     <div class="signin-input signup-input">
                         <div class="signin-uname-pwd">
                             <label class="custom-field">
-                                <input type="text" required />
+                                <input id="text" type="text" required />
                                 <label for="text" class="placeholder">E-mail</label>
                             </label>
                             <label class="custom-field">
-                                <input type="text" required />
-                                <label for="username" class="placeholder">Username</label>
+                                <input id="username-signup" type="text" required />
+                                <label for="username-signup" class="placeholder">Username</label>
                             </label>
                             <label class="custom-field">
-                                <input type="password" required />
-                                <label for="password" class="placeholder">Password</label>
+                                <input id="password-signup" type="password" required />
+                                <label for="password-signup" class="placeholder">Password</label>
                             </label>
                         </div>
                         <div class="signin-buttons-container">
@@ -227,6 +227,75 @@
     </div>
     </div>
 
+    <div class="game-area">
+        <div class="board-area">
+        </div>
+        <div class="config-area">
+            <div class="configs">
+                <h2>Configurations</h2>
+                <div class="num-cavity-wrapper">
+                    <label class="custom-field">
+                        <input id="num-cavities" type="text" required />
+                        <label for="num-cavities" class="placeholder">Number of Cavities</label>
+                    </label>
+                </div>
+                <div class="num-init-seeds-wrapper">
+                    <label class="custom-field">
+                        <input id="num-init-seeds" type="password" required />
+                        <label for="num-init-seeds" class="placeholder">Number of Initial Seeds</label>
+                    </label>
+                </div>
+                <div class="game-type-wrapper">
+                    <label for="game-type">Play Against:</label>
+                    <form name="game-type" id="game-type">
+                        <input type="radio" id="computer-type" name="game-option" value="computer-type">
+                        <label for="computer-type">Computer</label><br>
+                        <input type="radio" id="person-type" name="game-option" value="person-type">
+                        <label for="person-type">Another Person</label><br>
+                    </form>
+                </div>
+                <div class="ai-level-wrapper">
+                    <label class="custom-field">
+                        <label for="ai-level">AI Level:</label>
+                        <select name="ai-level" id="ai-level">
+                            <option value="very-easy">Very Easy</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                            <option value="very-hard">Very Hard</option>
+                            <option value="godlike">Godlike</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="game-code-wrapper">
+                    <label class="custom-field">
+                        <input id="game-code" type="text" required />
+                        <label for="game-code" class="placeholder">Game Code</label>
+                    </label>
+                </div>
+                <div class="game-turn-wrapper">
+                    <label for="game-turn">First Turn:</label>
+                    <form name="game-turn" id="game-turn">
+                        <input type="radio" id="you-turn" name="game-option" value="you-turn">
+                        <label for="you-turn">You</label><br>
+                        <input type="radio" id="adversary-turn" name="game-option" value="adversary-turn">
+                        <label for="adversary-turn">Adversary</label><br>
+                    </form>
+                </div>
+            </div>
+            <div class="start-button">
+                <button>Start the Game!</button>
+            </div>
+        </div>
+        <div class="message-area">
+            <div class="message-box">
+                <div>asda</div>
+                <div>asda</div>
+                <div>asda</div>
+
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

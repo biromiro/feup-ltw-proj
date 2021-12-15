@@ -71,6 +71,8 @@ picture {
 
 /* Inherit fonts for inputs and buttons */
 input,
+select,
+option,
 button,
 textarea,
 select {
@@ -210,8 +212,32 @@ select {
     transform: rotate(-45deg);
 }
 
+.game-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        "Board Board Board Board Board Board Board Configs Configs Configs"
+        "Board Board Board Board Board Board Board Configs Configs Configs"
+        "Messages Messages Messages Messages Messages Messages Messages Configs Configs Configs";
+}
+
+.board-area {
+    grid-area: Board;
+}
+
+.config-area {
+
+    grid-area: Configs;
+}
+
+.message-area {
+    grid-area: Messages;
+}
 
 .board {
+    margin: 5%;
     display: grid;
     grid-template-columns: [first-cell] 1fr repeat(var(--nCavities), 1fr) [last-cell] 1fr;
     grid-template-rows: repeat(2, 1fr);
@@ -224,7 +250,6 @@ select {
     -webkit-border-radius: 1em;
     -moz-border-radius: 1em;
     border-radius: 1em;
-    margin: auto;
 }
 
 .cavity {
@@ -464,7 +489,8 @@ table th {
     position: relative;
 }
 
-.custom-field input {
+.custom-field input,
+.custom-field select {
     margin: 0.6rem;
     padding: 0.2rem;
     border: none;
@@ -495,13 +521,17 @@ table th {
 }
 
 .custom-field input:focus,
-.custom-field input:valid {
+.custom-field input:valid,
+.custom-field select:focus,
+.custom-field select:valid {
     border-color: var(--main-text-color);
     transition-delay: 0.25s;
 }
 
 .custom-field input:focus+.placeholder,
-.custom-field input:valid+.placeholder {
+.custom-field input:valid+.placeholder,
+.custom-field select:focus+.placeholder,
+.custom-field select:valid+.placeholder {
     top: -10px;
     font-size: 0.8rem;
     color: var(--main-text-color);
@@ -641,4 +671,29 @@ table th {
         height: 2px;
         margin: 5%;
     }
+}
+
+.configs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-right: 8%;
+    margin-top: 8%;
+    background-color: var(--main-bg-color);
+    padding: 5%;
+    border-radius: 50px;
+}
+
+.start-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5%;
+}
+
+.message-box {
+    background-color: var(--main-bg-color);
+    margin: 1% 20% 5% 8%;
+    overflow-y: scroll;
 }
