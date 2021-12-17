@@ -214,13 +214,15 @@ select {
 
 .game-area {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    gap: 0px 0px;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(3, 10%);
+    grid-auto-rows: 1fr;
     grid-template-areas:
         "Board Board Board Board Board Board Board Configs Configs Configs"
         "Board Board Board Board Board Board Board Configs Configs Configs"
         "Messages Messages Messages Messages Messages Messages Messages Configs Configs Configs";
+    overflow: auto;
+
 }
 
 .board-area {
@@ -520,6 +522,10 @@ table th {
         color 0.3s ease;
 }
 
+.configs-fields .placeholder {
+    top: 0px;
+}
+
 .custom-field input:focus,
 .custom-field input:valid,
 .custom-field select:focus,
@@ -533,6 +539,15 @@ table th {
 .custom-field select:focus+.placeholder,
 .custom-field select:valid+.placeholder {
     top: -10px;
+    font-size: 0.8rem;
+    color: var(--main-text-color);
+}
+
+.configs-fields input:focus+.placeholder,
+.configs-fields input:valid+.placeholder,
+.configs-fields select:focus+.placeholder,
+.configs-fields select:valid+.placeholder {
+    top: -22px;
     font-size: 0.8rem;
     color: var(--main-text-color);
 }
@@ -573,6 +588,16 @@ table th {
 
 .close-button:hover {
     background-color: rgb(185, 56, 56);
+}
+
+.start-button {
+    background-color: var(--main-bg-color);
+    color: var(--main-text-color);
+    font-size: 1.1em;
+}
+
+.start-button:hover {
+    background-color: #f3efef;
 }
 
 .profile {
@@ -673,7 +698,8 @@ table th {
     }
 }
 
-.configs {
+.configs,
+.summary {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -685,15 +711,38 @@ table th {
     border-radius: 50px;
 }
 
-.start-button {
+.start-button-wrapper,
+.end-button-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5%;
+    margin: 5% 8% 5% 5%;
+}
+
+.start-button {
+    padding: 2em;
+    background: var(--main-bg-color);
 }
 
 .message-box {
+    position: flex;
+    flex-direction: row;
     background-color: var(--main-bg-color);
     margin: 1% 20% 5% 8%;
-    overflow-y: scroll;
+    height: 8.5em;
+    padding: 0.5em 1em;
+    border-radius: 50px;
+}
+
+.messages {
+    margin: 0.5em;
+    overflow-y: auto;
+    height: 6.5em;
+    font-size: 1em;
+}
+
+.messages div {
+    font-size: 1.5em;
+    padding: 0.1em;
+    margin: 0.5em;
 }
