@@ -46,6 +46,7 @@ class Board
 
         this.cavities.forEach(cavity => {
             cavity.genDisplay();
+            cavity.hookOnClick();
         });
     }
 
@@ -66,10 +67,8 @@ class Board
         }
     }
 
-    sow(cavityIdx)
+    sow(sourceCavity)
     {
-        let sourceCavity = this.cavities[cavityIdx];
-
         //mustn't sow from storage cavities
         if (sourceCavity.isStorage())
         {
@@ -97,7 +96,7 @@ class Board
 
         //sow
         let targetCavity;
-        let targetCavityIdx = cavityIdx;
+        let targetCavityIdx = this.cavities.indexOf(sourceCavity);
 
         while (sourceCavity.seeds.length)
         {
@@ -110,25 +109,32 @@ class Board
             return {outcome : SowOutcome.PlayAgain};
         
         if (targetCavity.player() == sourceCavity.player() && targetCavity.empty())
-            return {outcome : SowOutcome.TakeSeeds, cavity : cavityIdx};
+            return {outcome : SowOutcome.TakeSeeds, cavity : targetCavityIdx};
     }
 
-    turn(player, cavityIdx)
+    turn(player, sourceCavity)
     {
-        const sourceCavity = this.cavities[cavityIdx];
-        
         if (sourceCavity.player() != player)
             return TurnOutcome.InvalidSourceCavity;
         
-        const result = this.sow(cavityIdx);
+        const result = this.sow(sourceCavity);
+
+        if (result == null)
+            return;
 
         if (result.outcome == SowOutcome.PlayAgain)
             return result.outcome;
         
         if(result.outcome == SowOutcome.TakeSeeds)
         {
+            const storageIdx = player == Player.Player1 ? 0 : this.nCavities + 1;
+            let storage = this.cavities[storageIdx];
+
+            this.take(1, result.cavity, storage);
+
+            const cavityIdx = this.cavities.indexOf(result.cavity);
             let toTake = this.cavities[this.cavities.length - cavityIdx];
-            this.take(toTake.seeds.length, toTake) //finish
+            this.take(toTake.seeds.length, toTake, storage); //finish
         }
     }
 }
@@ -145,6 +151,14 @@ class Cavity
             seed.genDisplay();
         });
     }
+    
+    hookOnClick()
+    {
+        if (this.isStorage())
+            return;
+        
+        this.element.addEventListener('click', this.board.sow(this));
+    }
 
     updateDisplay()
     {
@@ -158,7 +172,7 @@ class Cavity
     player()
     {
         const idx = this.board.cavities.indexOf(this);
-        return idx < this.board.nCavities + 1 ? Player.Player1 : Player.Player2;
+        return idx <= this.board.nCavities ? Player.Player1 : Player.Player2;
     }
 
     isStorage()
