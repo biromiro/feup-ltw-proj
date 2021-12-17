@@ -1,3 +1,19 @@
+const Player = {
+    Player1 : 'Player1',
+    Player2 : 'Player2',
+}
+
+const TurnOutcome = {
+    InvalidSourceCavity: 'InvalidSourceCavity',
+}
+
+const SowOutcome = {
+    PlayAgain: 'PlayAgain',
+    TakeSeeds: 'TakeSeeds',
+    InvalidSourceCavity: 'InvalidSourceCavity',
+    EmptySourceCavity: 'EmptySourceCavity',
+};
+
 class Board
 {
     constructor(body, nCavities, nSeeds)
@@ -40,42 +56,80 @@ class Board
         });
     }
 
+    take(n, from, to)
+    {
+        for (let i = 0; i < n; i++)
+        {
+            let movedSeed = from.seeds.pop();
+            movedSeed.cavity = to;
+            to.seeds.push(movedSeed);
+        }
+    }
+
     sow(cavityIdx)
     {
         let sourceCavity = this.cavities[cavityIdx];
 
-        if(sourceCavity.specifier)
+        //mustn't sow from storage cavities
+        if (sourceCavity.isStorage())
         {
             alert('oopsie!');
-            return;
+            return {outcome : SowOutcome.InvalidSourceCavity};
         }
 
-        if(!sourceCavity.seeds.length)
+        //mustn't sow from empty cavities
+        if (sourceCavity.empty())
         {
             alert('oopsie daisy!');
-            return;
+            return {outcome : SowOutcome.EmptySourceCavity};
         }
 
         const sowableCavities = [...this.cavities];
 
         for (let i = 0; i < sowableCavities.length; i++) {
             const cavity = sowableCavities[i];
-            if(cavity.specifier && cavity.player() != sourceCavity.player()) {
+            //mustn't sow on the adversary's storage cavity
+            if(cavity.isStorage() && cavity.player() != sourceCavity.player()) {
                 sowableCavities.pop(cavity);
                 break;
             }
         }
 
-        for (const [i, seed] of sourceCavity.seeds.entries())
-        {
-            const targetCavity = sowableCavities[cavityIdx + i + 1];
+        //sow
+        let targetCavity;
+        let targetCavityIdx = cavityIdx;
 
-            seed.cavity = targetCavity;
-            
-            targetCavity.seeds.push(seed);
+        while (sourceCavity.seeds.length)
+        {
+            targetCavityIdx = (targetCavityIdx + 1) % sowableCavities.length;
+            targetCavity = sowableCavities[targetCavityIdx];
+            this.take(1, sourceCavity, targetCavity);
         }
 
-        sourceCavity.seeds = [];
+        if (targetCavity.player() == sourceCavity.player() && targetCavity.isStorage())
+            return {outcome : SowOutcome.PlayAgain};
+        
+        if (targetCavity.player() == sourceCavity.player() && targetCavity.empty())
+            return {outcome : SowOutcome.TakeSeeds, cavity : cavityIdx};
+    }
+
+    turn(player, cavityIdx)
+    {
+        const sourceCavity = this.cavities[cavityIdx];
+        
+        if (sourceCavity.player() != player)
+            return TurnOutcome.InvalidSourceCavity;
+        
+        const result = this.sow(cavityIdx);
+
+        if (result.outcome == SowOutcome.PlayAgain)
+            return result.outcome;
+        
+        if(result.outcome == SowOutcome.TakeSeeds)
+        {
+            let toTake = this.cavities[this.cavities.length - cavityIdx];
+            this.take(toTake.seeds.length, toTake) //finish
+        }
     }
 }
 
@@ -104,7 +158,17 @@ class Cavity
     player()
     {
         const idx = this.board.cavities.indexOf(this);
-        return idx < this.board.nCavities + 1 ? 1 : 2;
+        return idx < this.board.nCavities + 1 ? Player.Player1 : Player.Player2;
+    }
+
+    isStorage()
+    {
+        return this.specifier != null;
+    }
+
+    empty()
+    {
+        return !this.seeds.length;
     }
 
     deleteChildren()
