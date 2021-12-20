@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="popups.js" defer></script>
     <script src="game.js" defer></script>
+    <script src="toggles.js" defer></script>
     <title>Document</title>
 </head>
 
@@ -256,14 +257,14 @@
                     </form>
                 </div>
 
-                <div class="game-code-wrapper">
+                <div id="game-code" class="game-code-wrapper">
                     <label class="custom-field configs-fields">
                         <input id="game-code" type="text" required />
                         <label for="game-code" class="placeholder odd-behaviour" id="game-code">Game Code</label>
                     </label>
                 </div>
-                <!--
-                <div class="ai-level-wrapper">
+
+                <div id="ai-level" class="ai-level-wrapper">
                     <label class="custom-field">
                         <label for="ai-level">AI Level:</label>
                         <select name="ai-level" id="ai-level">
@@ -276,7 +277,7 @@
                         </select>
                     </label>
                 </div>
-            -->
+
                 <div class="game-turn-wrapper">
                     <label for="game-turn">First Turn:</label>
                     <form name="game-turn" id="game-turn">

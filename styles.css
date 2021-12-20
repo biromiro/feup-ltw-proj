@@ -746,3 +746,8 @@ table th {
     padding: 0.1em;
     margin: 0.5em;
 }
+
+.game-code-wrapper,
+.ai-level-wrapper {
+    display: none;
+}
