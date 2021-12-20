@@ -5,6 +5,8 @@ const Player = {
 
 const TurnOutcome = {
     InvalidSourceCavity: 'InvalidSourceCavity',
+    SwapPlayer: 'SwapPlayer',
+    SamePlayer: 'SamePlayer',
 }
 
 const SowOutcome = {
@@ -53,7 +55,11 @@ class Board
     updateDisplay()
     {
         this.cavities.forEach(cavity => {
-            cavity.updateDisplay();
+            if(cavity.wasChanged)
+            {
+                cavity.updateDisplay();
+                cavity.wasChanged = false;
+            }
         });
     }
 
@@ -83,6 +89,8 @@ class Board
             return {outcome : SowOutcome.EmptySourceCavity};
         }
 
+        sourceCavity.wasChanged = true;
+
         const sowableCavities = [...this.cavities];
 
         for (let i = 0; i < sowableCavities.length; i++) {
@@ -103,6 +111,7 @@ class Board
             targetCavityIdx = (targetCavityIdx + 1) % sowableCavities.length;
             targetCavity = sowableCavities[targetCavityIdx];
             this.take(1, sourceCavity, targetCavity);
+            targetCavity.wasChanged = true;
         }
 
         if (targetCavity.player() == sourceCavity.player() && targetCavity.isStorage())
@@ -120,10 +129,10 @@ class Board
         const result = this.sow(sourceCavity);
 
         if (result == null)
-            return;
+            return TurnOutcome.SwapPlayer;
 
         if (result.outcome == SowOutcome.PlayAgain)
-            return result.outcome;
+            return TurnOutcome.SamePlayer;
         
         if(result.outcome == SowOutcome.TakeSeeds)
         {
@@ -134,7 +143,9 @@ class Board
 
             const cavityIdx = this.cavities.indexOf(result.cavity);
             let toTake = this.cavities[this.cavities.length - cavityIdx];
-            this.take(toTake.seeds.length, toTake, storage); //finish
+            this.take(toTake.seeds.length, toTake, storage);
+
+            return TurnOutcome.SwapPlayer;
         }
     }
 }
@@ -150,6 +161,8 @@ class Cavity
         this.seeds.forEach(seed => {
             seed.genDisplay();
         });
+
+        this.wasChanged = false;
     }
     
     hookOnClick()
@@ -157,7 +170,10 @@ class Cavity
         if (this.isStorage())
             return;
         
-        this.element.addEventListener('click', this.board.sow(this));
+        this.element.addEventListener('click', function() {
+            board.sow(this);
+            board.updateDisplay();
+        }.bind(this)); //needs fixin'
     }
 
     updateDisplay()
