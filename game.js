@@ -16,6 +16,10 @@ const SowOutcome = {
     EmptySourceCavity: 'EmptySourceCavity',
 };
 
+function range(start, end) {
+    return Array(end - start + 1).fill().map((_, idx) => start + idx)
+}
+
 class Board
 {
     constructor(body, nCavities, nSeeds)
@@ -23,18 +27,31 @@ class Board
         this.body = body;
 
         this.cavities = [];
+        
+        this.cavitiesIndices = [];
 
         this.cavities.push(new Cavity(this, 0, 'c-big c-left'));
+
+        this.cavitiesIndices.push(0);
 
         this.nCavities = nCavities;
 
         for (let i = 0; i < this.nCavities; i++)
             this.cavities.push(new Cavity(this, nSeeds));
 
+        this.cavitiesIndices = this.cavitiesIndices.concat(range(1, nCavities - 1))
+
         this.cavities.push(new Cavity(this, 0, 'c-big c-right'));
+        
+        this.cavitiesIndices.push(nCavities);
 
         for (let i = 0; i < this.nCavities; i++)
             this.cavities.push(new Cavity(this, nSeeds));
+
+        let invertedIndices = range(nCavities + 1, nCavities * 2 + 1).reverse()
+        
+        this.cavitiesIndices = this.cavitiesIndices.concat(invertedIndices);
+
     }
 
     genDisplay()
@@ -45,10 +62,12 @@ class Board
 
         const root = document.querySelector(':root');
         root.style.setProperty('--nCavities', this.nCavities);
+        
+        console.log(this.cavitiesIndices);
 
-        this.cavities.forEach(cavity => {
-            cavity.genDisplay();
-            cavity.hookOnClick();
+        this.cavitiesIndices.forEach(index => {
+            this.cavities[index].genDisplay();
+            this.cavities[index].hookOnClick();
         });
     }
 
@@ -255,6 +274,10 @@ class Seed
     constructor(cavity)
     {
         this.cavity = cavity;
+        this.x = undefined;
+        this.y = undefined;
+        this.prevX = undefined;
+        this.prevY = undefined;
     }
 }
 
