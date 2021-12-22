@@ -10,6 +10,7 @@
     <script src="toggles.js" defer></script>
     <script src="requests.js" defer></script>
     <script src="auxiliar.js" defer></script>
+    <script type="module" src="actions.js" defer></script>
     <script type="module" src="eventListeners.js" defer></script>
     <title>Document</title>
 </head>
@@ -19,7 +20,7 @@
         <div class="logo">
             <img class="logo-img" src="img/logo_castanho.svg" alt="Mancala">
         </div>
-        <a href="#" class="toggle-button">
+        <a href="#" id="toggle-button" class="toggle-button">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
@@ -146,17 +147,17 @@
         <div class="pop-up-container">
             <a href="#" class="close close-signin"></a>
 
-            <!--<div class="profile">
-                <h2>biromiro</h2>
+            <div id="profile" class="profile">
+                <h2>aaa</h2>
                 <div class="profile-buttons-container">
-                    <button type="menu" class="submit-button button">Change Password</button>
-                    <button type="submit" class="close-button button">Terminate Session</button>
+                    <!--<button type="menu" class="submit-button button">Change Password</button>-->
+                    <button id="logout-button" type="submit" class="close-button button">Terminate Session</button>
                 </div>
-            </div>-->
-            <div class="signin">
+            </div>
+            <div id="signin" class="signin">
                 <div class="signin-component login-component">
                     <h2 class="pop-up-main-title">Log-In</h2>
-                    <div class="signin-input login-input">
+                    <form id="login-form" class="signin-input login-input">
                         <div class="signin-uname-pwd">
                             <label class="custom-field">
                                 <input id="username-login" type="text" required />
@@ -170,17 +171,14 @@
                         <div class="signin-buttons-container">
                             <button type="submit" class="submit-button button">Come on in!</button>
                         </div>
-                    </div>
+                    </form>
+                    <small id="wrong-password-login" class="error-message"></small>
                 </div>
                 <div class="signin-filler"></div>
                 <div class="signin-component signup-component">
                     <h2 class="pop-up-main-title">Sign-Up</h2>
-                    <div class="signin-input signup-input">
+                    <form id="signup-form" class="signin-input signup-input">
                         <div class="signin-uname-pwd">
-                            <label class="custom-field">
-                                <input id="text" type="text" required />
-                                <label for="text" class="placeholder">E-mail</label>
-                            </label>
                             <label class="custom-field">
                                 <input id="username-signup" type="text" required />
                                 <label for="username-signup" class="placeholder">Username</label>
@@ -193,7 +191,8 @@
                         <div class="signin-buttons-container">
                             <button type="submit" class="submit-button button">Come on in!</button>
                         </div>
-                    </div>
+                    </form>
+                    <small id="wrong-password-signup" class="error-message"></small>
                 </div>
             </div>
         </div>

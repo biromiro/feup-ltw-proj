@@ -1,7 +1,8 @@
 import * as req from './requests.js';
 import * as aux from './auxiliar.js';
+import * as act from './actions.js';
 
-const toggleButton = document.getElementsByClassName('toggle-button')[0]
+const toggleButton = document.getElementById('toggle-button')
 const navbarLinks = document.getElementsByClassName('navbar-links')[0]
 
 toggleButton.addEventListener('click', () => {
@@ -40,36 +41,8 @@ const ldb = document.getElementsByClassName('ldb')[0]
 ldbButton.addEventListener('click', () => {
     const ranking = req.POSTRequest({}, 'ranking');
     ranking.then(function(data) {
-
-        let header = `<tr>
-                        <th>Username</th>
-                        <th>Games</th>
-                        <th>Victories</th>
-                      </tr>`
-
-        ldbContent.innerHTML = header;
-
-        let ranking = data.ranking;
-
-        for (let [index, player] of ranking.entries()) {
-
-            let style = "";
-
-            switch(index) {
-                case 0: style = "gold"; break;
-                case 1: style = "silver"; break;
-                case 2: style = "#CD7F32";
-            }
-
-            ldbContent.innerHTML += `<tr>
-                                        <td>${player.nick}</td>
-                                        <td>${player.games}</td>
-                                        <td style="background-color:${style};">${player.victories}</td>
-                                     </tr>`
-        }
-
-        console.log(data);
-
+        if(data.error) act.handleError(data);
+        else act.getLeaderboard(data, ldbContent);
         ldbContainer.classList.toggle('active')
         ldb.classList.toggle('active')
     })
@@ -108,4 +81,46 @@ closeSignin.addEventListener('click', () => {
 backgroundSignin.addEventListener('click', () => {
     signinContainer.classList.toggle('active')
     signin.classList.toggle('active')
+});
+
+const loginForm = document.getElementById('login-form');
+const loginErrorMessage = document.getElementById('wrong-password-login');
+
+loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    let params = {
+        'nick' : loginForm['password-login'].value,
+        'password' : loginForm['username-login'].value
+    }
+    const login = req.POSTRequest(params, 'register');
+    login.then(function(data) {
+        if(data.error) act.handleError(data, loginErrorMessage);
+        else act.login(data);
+    });
+    loginForm.reset();
+});
+
+const signupForm = document.getElementById('signup-form');
+const signupErrorMessage = document.getElementById('wrong-password-signup');
+
+signupForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    let params = {
+        'nick' : signupForm['password-signup'].value,
+        'password' : signupForm['username-signup'].value
+    }
+    const signup = req.POSTRequest(params, 'register');
+    signup.then(function(data) {
+        if(data.error) act.handleError(data, signupErrorMessage);
+        else act.login(params);
+    });
+    signupForm.reset();
+});
+
+const logoutButton = document.getElementById('logout-button');
+
+logoutButton.addEventListener('click', () => {
+    act.logout();
 });

@@ -6,7 +6,9 @@ export function POSTRequest(body, path) {
         method : 'POST',
         body : JSON.stringify( body )
     }
-    
-    return fetch(serverURL + path, options).then(response => { return response.json(); })
+
+    let request = new Request(serverURL + path, options);
+
+    return fetch(request).then(response => { return response.json(); })
 }
 
