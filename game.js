@@ -28,29 +28,25 @@ class Board
 
         this.cavities = [];
         
-        this.cavitiesIndices = [];
 
         this.cavities.push(new Cavity(this, 0, 'c-big c-left'));
-
-        this.cavitiesIndices.push(0);
 
         this.nCavities = nCavities;
 
         for (let i = 0; i < this.nCavities; i++)
             this.cavities.push(new Cavity(this, nSeeds));
 
-        this.cavitiesIndices = this.cavitiesIndices.concat(range(1, nCavities - 1))
-
         this.cavities.push(new Cavity(this, 0, 'c-big c-right'));
         
-        this.cavitiesIndices.push(nCavities);
-
         for (let i = 0; i < this.nCavities; i++)
             this.cavities.push(new Cavity(this, nSeeds));
 
-        let invertedIndices = range(nCavities + 1, nCavities * 2 + 1).reverse()
-        
+        this.cavitiesIndices = [];
+        this.cavitiesIndices.push(0);
+        let invertedIndices = range(nCavities + 2, nCavities * 2 + 1).reverse();
         this.cavitiesIndices = this.cavitiesIndices.concat(invertedIndices);
+        this.cavitiesIndices.push(nCavities + 1);
+        this.cavitiesIndices = this.cavitiesIndices.concat(range(1, nCavities))
 
     }
 
