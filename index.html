@@ -148,7 +148,7 @@
             <a href="#" class="close close-signin"></a>
 
             <div id="profile" class="profile">
-                <h2>aaa</h2>
+                <h2 id="profile-nickname"></h2>
                 <div class="profile-buttons-container">
                     <!--<button type="menu" class="submit-button button">Change Password</button>-->
                     <button id="logout-button" type="submit" class="close-button button">Terminate Session</button>
@@ -202,80 +202,91 @@
     <div class="game-area">
         <div class="board-area">
         </div>
-        <div class="config-area">
+        <form id="game-start-form" class="config-area">
+            <div class="config-area">
+                <div id="pre-game-configs">
+                    <div class="configs">
+                        <h2>Configurations</h2>
+                        <div class="num-cavity-wrapper">
+                            <label class="custom-field configs-fields">
+                                <input id="num-cavities" type="text" required />
+                                <label for="num-cavities" class="placeholder">Number of Cavities</label>
+                            </label>
+                        </div>
+                        <div class="num-init-seeds-wrapper">
+                            <label class="custom-field configs-fields">
+                                <input id="num-init-seeds" type="text" required />
+                                <label for="num-init-seeds" class="placeholder">Number of Initial Seeds</label>
+                            </label>
+                        </div>
+                        <div class="game-type-wrapper">
+                            <label for="game-type">Play Against:</label>
+                            <div id="game-type">
+                                <input id="computer-check" type="radio" id="computer-type" name="game-type"
+                                    value="computer-type">
+                                <label for="computer-type">Computer</label><br>
+                                <input id="person-check" type="radio" id="person-type" name="game-type"
+                                    value="person-type">
+                                <label for="person-type">Another Person</label><br>
+                            </div>
+                        </div>
 
-            <div class="configs">
-                <h2>Configurations</h2>
-                <div class="num-cavity-wrapper">
-                    <label class="custom-field configs-fields">
-                        <input id="num-cavities" type="text" required />
-                        <label for="num-cavities" class="placeholder">Number of Cavities</label>
-                    </label>
-                </div>
-                <div class="num-init-seeds-wrapper">
-                    <label class="custom-field configs-fields">
-                        <input id="num-init-seeds" type="text" required />
-                        <label for="num-init-seeds" class="placeholder">Number of Initial Seeds</label>
-                    </label>
-                </div>
-                <div class="game-type-wrapper">
-                    <label for="game-type">Play Against:</label>
-                    <form name="game-type" id="game-type">
-                        <input type="radio" id="computer-type" name="game-option" value="computer-type">
-                        <label for="computer-type">Computer</label><br>
-                        <input type="radio" id="person-type" name="game-option" value="person-type">
-                        <label for="person-type">Another Person</label><br>
-                    </form>
-                </div>
+                        <div id="game-code" class="game-code-wrapper">
+                            <label class="custom-field configs-fields">
+                                <input id="game-code" type="text" />
+                                <label for="game-code" class="placeholder odd-behaviour" id="game-code">Group
+                                    Code</label>
+                            </label>
+                        </div>
 
-                <div id="game-code" class="game-code-wrapper">
-                    <label class="custom-field configs-fields">
-                        <input id="game-code" type="text" required />
-                        <label for="game-code" class="placeholder odd-behaviour" id="game-code">Game Code</label>
-                    </label>
-                </div>
+                        <div id="ai-level" class="ai-level-wrapper">
+                            <label class="custom-field">
+                                <label for="ai-level">AI Level:</label>
+                                <select name="ai-level" id="ai-level">
+                                    <option value="very-easy">Very Easy</option>
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                    <option value="very-hard">Very Hard</option>
+                                    <option value="godlike">Godlike</option>
+                                </select>
+                            </label>
+                        </div>
+                        <small id="wrong-form-params" class="error-message"></small>
 
-                <div id="ai-level" class="ai-level-wrapper">
-                    <label class="custom-field">
-                        <label for="ai-level">AI Level:</label>
-                        <select name="ai-level" id="ai-level">
-                            <option value="very-easy">Very Easy</option>
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
-                            <option value="very-hard">Very Hard</option>
-                            <option value="godlike">Godlike</option>
-                        </select>
-                    </label>
-                </div>
 
-                <div class="game-turn-wrapper">
-                    <label for="game-turn">First Turn:</label>
-                    <form name="game-turn" id="game-turn">
-                        <input type="radio" id="you-turn" name="game-option" value="you-turn">
-                        <label for="you-turn">You</label><br>
-                        <input type="radio" id="adversary-turn" name="game-option" value="adversary-turn">
-                        <label for="adversary-turn">Adversary</label><br>
-                    </form>
+                        <!--<div class="game-turn-wrapper">
+                        <label for="game-turn">First Turn:</label>
+                        <div id="game-turn">
+                            <input type="radio" id="you-turn" name="game-turn" value="you-turn">
+                            <label for="you-turn">You</label><br>
+                            <input type="radio" id="adversary-turn" name="game-turn" value="adversary-turn">
+                            <label for="adversary-turn">Adversary</label><br>
+                        </div>
+                    </div>-->
+                    </div>
+                    <div class="start-button-wrapper">
+                        <button id="game-start-button" type="submit" class="start-button button">Start the
+                            Game!</button>
+                    </div>
+                </div>
+                <div id="in-game-summary" class="configs">
+                    <div class="summary">
+                        <h2>Summary</h2>
+                        <h3>Player1</h3>
+                        <h4>45 Points</h4>
+                        <h3>Player 2</h3>
+                        <h4>33 Points</h4>
+                    </div>
+                    <small id="wrong-form-params-summary" class="error-message"></small>
+                    <div class="end-button-wrapper">
+                        <button id="game-leave-button" type="submit" class="close-button button">Leave the
+                            Game!</button>
+                    </div>
                 </div>
             </div>
-            <div class="start-button-wrapper">
-                <button type="submit" class="start-button button">Start the Game!</button>
-            </div>
-            <!--
-            <div class="summary">
-                <h2>Summary</h2>
-                <h3>Player1</h3>
-                <h4>45 Points</h4>
-                <h3>Player 2</h3>
-                <h4>33 Points</h4>
-            </div>
-            <div class="end-button-wrapper">
-                <button type="submit" class="close-button button">Leave the Game!</button>
-            </div>
-        
-        -->
-        </div>
+        </form>
+
         <div class="message-area">
             <div class="message-box">
                 <div class="messages">

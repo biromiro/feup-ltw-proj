@@ -11,4 +11,3 @@ export function POSTRequest(body, path) {
 
     return fetch(request).then(response => { return response.json(); })
 }
-

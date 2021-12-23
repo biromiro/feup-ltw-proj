@@ -1,6 +1,6 @@
 import * as req from './requests.js';
-import * as aux from './auxiliar.js';
 import * as act from './actions.js';
+import * as tog from './toggles.js';
 
 const toggleButton = document.getElementById('toggle-button')
 const navbarLinks = document.getElementsByClassName('navbar-links')[0]
@@ -39,14 +39,11 @@ const ldbContent = document.getElementsByClassName('ldb-content')[0]
 const ldb = document.getElementsByClassName('ldb')[0]
 
 ldbButton.addEventListener('click', () => {
-    const ranking = req.POSTRequest({}, 'ranking');
-    ranking.then(function(data) {
-        if(data.error) act.handleError(data);
-        else act.getLeaderboard(data, ldbContent);
+
+    act.getLeaderboard(ldbContent).then(() => {
         ldbContainer.classList.toggle('active')
         ldb.classList.toggle('active')
-    })
-    
+    });
 });
 
 
@@ -89,16 +86,9 @@ const loginErrorMessage = document.getElementById('wrong-password-login');
 loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
     event.stopImmediatePropagation();
-    let params = {
-        'nick' : loginForm['password-login'].value,
-        'password' : loginForm['username-login'].value
-    }
-    const login = req.POSTRequest(params, 'register');
-    login.then(function(data) {
-        if(data.error) act.handleError(data, loginErrorMessage);
-        else act.login(data);
+    act.login(loginForm, loginErrorMessage).then(() => {
+        loginForm.reset();
     });
-    loginForm.reset();
 });
 
 const signupForm = document.getElementById('signup-form');
@@ -107,20 +97,35 @@ const signupErrorMessage = document.getElementById('wrong-password-signup');
 signupForm.addEventListener('submit', (event) => {
     event.preventDefault();
     event.stopImmediatePropagation();
-    let params = {
-        'nick' : signupForm['password-signup'].value,
-        'password' : signupForm['username-signup'].value
-    }
-    const signup = req.POSTRequest(params, 'register');
-    signup.then(function(data) {
-        if(data.error) act.handleError(data, signupErrorMessage);
-        else act.login(params);
+    act.register(signupForm, signupErrorMessage).then(() => {
+        signupForm.reset();
     });
-    signupForm.reset();
 });
 
 const logoutButton = document.getElementById('logout-button');
 
 logoutButton.addEventListener('click', () => {
     act.logout();
+});
+
+const gameStartForm = document.getElementById('game-start-form');
+const gameStartErrorMessage = document.getElementById('wrong-form-params');
+
+gameStartForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if(tog.isAIGameType()) console.log("computer game undefined");
+    else if(tog.isPVPGameType()) {
+        act.join(gameStartForm, gameStartErrorMessage).then(() => {
+            gameStartForm.reset();
+        });
+    } else act.handleError({'error': 'Game Type is still not defined.'}, gameStartErrorMessage);
+
+});
+
+const gameLeaveButton = document.getElementById('game-leave-button');
+const gameLeaveErrorMessage = document.getElementById('wrong-form-params-summary');
+
+gameLeaveButton.addEventListener('click', () => {
+    act.leave(gameLeaveErrorMessage);
 });

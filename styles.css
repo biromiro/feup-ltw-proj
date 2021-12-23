@@ -716,6 +716,10 @@ table th {
     border-radius: 50px;
 }
 
+#in-game-summary {
+    display: none;
+}
+
 .start-button-wrapper,
 .end-button-wrapper {
     display: flex;
