@@ -1,5 +1,6 @@
 import * as req from './requests.js';
 import * as act from './actions.js';
+import * as aux from './auxiliar.js';
 import * as tog from './toggles.js';
 
 const toggleButton = document.getElementById('toggle-button')
@@ -19,6 +20,7 @@ rulesButton.addEventListener('click', () => {
     rulesContainer.classList.toggle('active')
     rules.classList.toggle('active')
 });
+
 
 closeRules.addEventListener('click', () => {
     rulesContainer.classList.toggle('active')
@@ -114,6 +116,7 @@ const gameStartErrorMessage = document.getElementById('wrong-form-params');
 gameStartForm.addEventListener('submit', (event) => {
     event.preventDefault();
     event.stopImmediatePropagation();
+
     if(tog.isAIGameType()) console.log("computer game undefined");
     else if(tog.isPVPGameType()) {
         act.join(gameStartForm, gameStartErrorMessage).then(() => {
@@ -127,4 +130,14 @@ const gameLeaveErrorMessage = document.getElementById('wrong-form-params-summary
 
 gameLeaveButton.addEventListener('click', () => {
     act.leave(gameLeaveErrorMessage);
+});
+
+const errorMessages = [].slice.call(document.getElementsByClassName('error-message'));
+
+errorMessages.forEach(message => {
+    message.addEventListener('DOMSubtreeModified', () => {
+        setTimeout( function() { 
+            aux.clearInnerContent(message);
+        }, 5000);
+    });
 });

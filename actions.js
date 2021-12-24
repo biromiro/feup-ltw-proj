@@ -136,15 +136,19 @@ export async function join(gameStartForm, gameStartErrorMessage) {
         currentGameCode = data.game;
         currentGroupCode = groupCode;
         
-        preGameContainer.style.display = 'none';
-        inGameContainer.style.display = 'flex';
-
-        const gameArea = document.getElementsByClassName('board-area')[0];
-        aux.clearInnerContent(gameArea);
-        console.log(`New Board with: ${params.size} cavities per side and ${params.initial} seeds per cavity.`)
-        const board = new game.Board(gameArea, parseInt(params.size), parseInt(params.initial));
-        board.genDisplay(board);
+        startGame(params);
     });
+}
+
+export function startGame(params) {
+    preGameContainer.style.display = 'none';
+    inGameContainer.style.display = 'flex';
+
+    const gameArea = document.getElementsByClassName('board-area')[0];
+    aux.clearInnerContent(gameArea);
+    console.log(`New Board with: ${params.size} cavities per side and ${params.initial} seeds per cavity.`)
+    const board = new game.Board(gameArea, parseInt(params.size), parseInt(params.initial));
+    board.genDisplay();
 }
 
 export async function leave(gameLeaveErrorMessage) {
@@ -166,12 +170,16 @@ export async function leave(gameLeaveErrorMessage) {
         currentGameCode = '';
         currentGroupCode = 0;
 
-        preGameContainer.style.display = 'flex';
-        preGameContainer.style += "flex-direction: column;"
-        inGameContainer.style.display = 'none';
-
-        const gameArea = document.getElementsByClassName('board-area')[0];
-        aux.clearInnerContent(gameArea);
-        gameArea.innerHTML = "<h1>No game is currently being played.</h1>"
+        endGame();
     });
+}
+
+export function endGame() {
+    preGameContainer.style.display = 'flex';
+    preGameContainer.style += "flex-direction: column;"
+    inGameContainer.style.display = 'none';
+
+    const gameArea = document.getElementsByClassName('board-area')[0];
+    aux.clearInnerContent(gameArea);
+    gameArea.innerHTML = "<h1>No game is currently being played.</h1>"
 }
