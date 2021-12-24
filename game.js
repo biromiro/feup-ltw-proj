@@ -1,3 +1,5 @@
+let board = undefined;
+
 const Player = {
     Player1 : 'Player1',
     Player2 : 'Player2',
@@ -63,6 +65,8 @@ export class Board
             this.cavities[index].genDisplay();
             this.cavities[index].hookOnClick();
         });
+
+        board = this;
     }
 
     updateDisplay()

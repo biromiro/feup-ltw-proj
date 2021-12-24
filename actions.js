@@ -135,12 +135,15 @@ export async function join(gameStartForm, gameStartErrorMessage) {
         if(data.error) return handleError(data, gameStartErrorMessage);
         currentGameCode = data.game;
         currentGroupCode = groupCode;
+        
         preGameContainer.style.display = 'none';
         inGameContainer.style.display = 'flex';
+
         const gameArea = document.getElementsByClassName('board-area')[0];
         aux.clearInnerContent(gameArea);
-        const board = new game.Board(gameArea, 6, 2);
-        board.genDisplay();
+        console.log(`New Board with: ${params.size} cavities per side and ${params.initial} seeds per cavity.`)
+        const board = new game.Board(gameArea, parseInt(params.size), parseInt(params.initial));
+        board.genDisplay(board);
     });
 }
 
@@ -159,11 +162,14 @@ export async function leave(gameLeaveErrorMessage) {
     const join = req.POSTRequest(params, 'leave');
     join.then(function(data) {
         if(data.error) return handleError(data, gameLeaveErrorMessage);
+
         currentGameCode = '';
         currentGroupCode = 0;
+
         preGameContainer.style.display = 'flex';
         preGameContainer.style += "flex-direction: column;"
         inGameContainer.style.display = 'none';
+
         const gameArea = document.getElementsByClassName('board-area')[0];
         aux.clearInnerContent(gameArea);
         gameArea.innerHTML = "<h1>No game is currently being played.</h1>"
