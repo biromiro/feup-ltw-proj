@@ -1,5 +1,6 @@
 import * as req from './requests.js';
 import * as aux from './auxiliar.js';
+import * as game from './game.js'
 
 let activeSession = {
     'valid' : false,
@@ -136,12 +137,16 @@ export async function join(gameStartForm, gameStartErrorMessage) {
         currentGroupCode = groupCode;
         preGameContainer.style.display = 'none';
         inGameContainer.style.display = 'flex';
+        const gameArea = document.getElementsByClassName('board-area')[0];
+        aux.clearInnerContent(gameArea);
+        const board = new game.Board(gameArea, 6, 2);
+        board.genDisplay();
     });
 }
 
 export async function leave(gameLeaveErrorMessage) {
 
-    if(!activeSession.valid) return handleError({error: 'You should be logged in - please reload the page.'}, gameStartErrorMessage);
+    if(!activeSession.valid) return handleError({error: 'You should be logged in - please reload the page.'}, gameLeaveErrorMessage);
 
     let params = {
         'nick' : activeSession.nick,
@@ -153,10 +158,14 @@ export async function leave(gameLeaveErrorMessage) {
     console.log(params);
     const join = req.POSTRequest(params, 'leave');
     join.then(function(data) {
-        if(data.error) return handleError(data, gameStartErrorMessage);
+        if(data.error) return handleError(data, gameLeaveErrorMessage);
         currentGameCode = '';
         currentGroupCode = 0;
         preGameContainer.style.display = 'flex';
+        preGameContainer.style += "flex-direction: column;"
         inGameContainer.style.display = 'none';
+        const gameArea = document.getElementsByClassName('board-area')[0];
+        aux.clearInnerContent(gameArea);
+        gameArea.innerHTML = "<h1>No game is currently being played.</h1>"
     });
 }

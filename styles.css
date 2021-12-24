@@ -121,6 +121,7 @@ select {
     align-items: center;
     background-color: var(--main-bg-color);
     color: var(--main-text-color);
+    height: 15vh;
 }
 
 .navbar-links {
@@ -214,18 +215,26 @@ select {
 .game-area {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(3, 10%);
+    grid-template-rows: repeat(3, 1fr);
     grid-auto-rows: 1fr;
     grid-template-areas:
         "Board Board Board Board Board Board Board Configs Configs Configs"
         "Board Board Board Board Board Board Board Configs Configs Configs"
         "Messages Messages Messages Messages Messages Messages Messages Configs Configs Configs";
     overflow: auto;
+    height: 85vh;
 
 }
 
 .board-area {
     grid-area: Board;
+}
+
+.board-area.inactive {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1% 20% 5% 8%;
 }
 
 .config-area {
@@ -575,6 +584,7 @@ table th {
     cursor: pointer;
 }
 
+
 .submit-button {
     background-color: var(--main-color);
     color: white;
@@ -726,6 +736,10 @@ table th {
     justify-content: center;
     align-items: center;
     margin: 5% 8% 5% 5%;
+}
+
+.end-button-wrapper {
+    width: 50%;
 }
 
 .start-button {

@@ -120,7 +120,6 @@ gameStartForm.addEventListener('submit', (event) => {
             gameStartForm.reset();
         });
     } else act.handleError({'error': 'Game Type is still not defined.'}, gameStartErrorMessage);
-
 });
 
 const gameLeaveButton = document.getElementById('game-leave-button');

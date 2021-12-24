@@ -20,7 +20,7 @@ function range(start, end) {
     return Array(end - start + 1).fill().map((_, idx) => start + idx)
 }
 
-class Board
+export class Board
 {
     constructor(body, nCavities, nSeeds)
     {
@@ -273,7 +273,3 @@ class Seed
         this.prevY = undefined;
     }
 }
-
-const gameArea = document.getElementsByClassName('board-area')[0];
-const board = new Board(gameArea, 6, 2);
-board.genDisplay();
