@@ -20,8 +20,6 @@ function range(start, end) {
     return Array(end - start + 1).fill().map((_, idx) => start + idx)
 }
 
-let curInd = 0;
-
 class Board
 {
     constructor(body, nCavities, nSeeds)
@@ -42,8 +40,6 @@ class Board
 
         this.cavities.push(new Cavity(this, 0, 'c-big c-left'));
 
-        console.log(this.cavities);
-
         this.cavitiesIndices = [];
         let invertedIndices = range(nCavities + 2, nCavities * 2 + 1);
         this.cavitiesIndices = this.cavitiesIndices.concat(invertedIndices.reverse());
@@ -63,8 +59,6 @@ class Board
         const root = document.querySelector(':root');
         root.style.setProperty('--nCavities', this.nCavities);
         
-        console.log(this.cavitiesIndices);
-
         this.cavitiesIndices.forEach(index => {
             this.cavities[index].genDisplay();
             this.cavities[index].hookOnClick();
@@ -114,16 +108,12 @@ class Board
 
         for (let i = 0; i < sowableCavities.length; i++) {
             const cavity = sowableCavities[i];
-            console.log(`On cavity ${cavity.index}: storage(${cavity.isStorage()}, player(${cavity.player()}))`)
             //mustn't sow on the adversary's storage cavity
             if(cavity.isStorage() && cavity.player() != sourceCavity.player()) {
                 sowableCavities.splice(i, 1);
                 break;
             }
         }
-
-        console.log(sowableCavities);
-
         //sow
         let targetCavity;
         let targetCavityIdx = sowableCavities.indexOf(sourceCavity);
@@ -178,8 +168,6 @@ class Cavity
     {
         this.element = document.createElement('div');
         this.element.className = this.specifier ? 'cavity ' + this.specifier : 'cavity';
-        this.element.innerText = this.index;
-        this.element.style = "color: white;"
         this.board.element.appendChild(this.element);
 
         this.seeds.forEach(seed => {
@@ -248,8 +236,6 @@ class Cavity
             let seed = new Seed(this);
             this.seeds.push(seed);
         }
-
-        this.index = curInd++;
     }
 }
 
