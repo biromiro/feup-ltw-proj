@@ -117,19 +117,31 @@ gameStartForm.addEventListener('submit', (event) => {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    if(tog.isAIGameType()) console.log("computer game undefined");
+    console.log("joined");
+
+    let formParams = {
+        'size': gameStartForm['num-cavities'].value,
+        'initial': gameStartForm['num-init-seeds'].value,
+        'group': gameStartForm['game-code'].value,
+        'AILevel': gameStartForm['ai-level'].value
+    }
+
+    if(tog.isAIGameType()) 
+        act.startGame(formParams);
     else if(tog.isPVPGameType()) {
-        act.join(gameStartForm, gameStartErrorMessage).then(() => {
-            gameStartForm.reset();
-        });
+        act.join(formParams, gameStartErrorMessage);
     } else act.handleError({'error': 'Game Type is still not defined.'}, gameStartErrorMessage);
+
+    gameStartForm.reset();
 });
 
 const gameLeaveButton = document.getElementById('game-leave-button');
 const gameLeaveErrorMessage = document.getElementById('wrong-form-params-summary');
 
 gameLeaveButton.addEventListener('click', () => {
-    act.leave(gameLeaveErrorMessage);
+    console.log("left");
+    if(tog.isPVPGameType()) act.leave(gameLeaveErrorMessage);
+    else if(tog.isAIGameType) act.endGame();
 });
 
 const errorMessages = [].slice.call(document.getElementsByClassName('error-message'));

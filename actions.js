@@ -123,10 +123,10 @@ export async function join(gameStartForm, gameStartErrorMessage) {
     let params = {
         'nick' : activeSession.nick,
         'password' : activeSession.password,
-        'size': gameStartForm['num-cavities'].value,
-        'initial': gameStartForm['num-init-seeds'].value
+        'size': gameStartForm.size,
+        'initial': gameStartForm.initial
     }
-    const groupCode = gameStartForm['game-code'].value;
+    const groupCode = gameStartForm.group;
     if(groupCode) params['group'] = groupCode;
 
     console.log(params);
@@ -182,4 +182,5 @@ export function endGame() {
     const gameArea = document.getElementsByClassName('board-area')[0];
     aux.clearInnerContent(gameArea);
     gameArea.innerHTML = "<h1>No game is currently being played.</h1>"
+    console.log('handled');
 }
