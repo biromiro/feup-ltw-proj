@@ -72,11 +72,7 @@ export class Board
     updateDisplay()
     {
         this.cavities.forEach(cavity => {
-            if(cavity.wasChanged)
-            {
-                cavity.updateDisplay();
-                cavity.wasChanged = false;
-            }
+            cavity.updateDisplay();
         });
     }
 
@@ -87,6 +83,8 @@ export class Board
             let movedSeed = from.seeds.pop();
             movedSeed.cavity = to;
             to.seeds.push(movedSeed);
+
+            movedSeed.wasChanged = true;
         }
     }
 
@@ -105,8 +103,6 @@ export class Board
             alert('oopsie daisy!');
             return {outcome : SowOutcome.EmptySourceCavity};
         }
-
-        sourceCavity.wasChanged = true;
 
         const sowableCavities = [...this.cavities];
 
@@ -127,7 +123,6 @@ export class Board
             targetCavityIdx = (targetCavityIdx + 1) % sowableCavities.length;
             targetCavity = sowableCavities[targetCavityIdx];
             this.take(1, sourceCavity, targetCavity);
-            targetCavity.wasChanged = true;
         }
 
         if (targetCavity.player() == sourceCavity.player() && targetCavity.isStorage())
@@ -158,7 +153,7 @@ export class Board
             this.take(1, result.cavity, storage);
 
             const cavityIdx = this.cavities.indexOf(result.cavity);
-            let toTake = this.cavities[this.cavities.length - cavityIdx];
+            let toTake = this.cavities[this.cavities.length - cavityIdx + 1];
             this.take(toTake.seeds.length, toTake, storage);
 
             return TurnOutcome.SwapPlayer;
@@ -177,8 +172,6 @@ class Cavity
         this.seeds.forEach(seed => {
             seed.genDisplay();
         });
-
-        this.wasChanged = false;
     }
     
     hookOnClick()
@@ -189,15 +182,17 @@ class Cavity
         this.element.addEventListener('click', function() {
             board.sow(this);
             board.updateDisplay();
-        }.bind(this)); //needs fixin'
+        }.bind(this));
     }
 
     updateDisplay()
     {
-        this.deleteChildren();
-
-        this.seeds.forEach(cavity => {
-            cavity.genDisplay();
+        this.seeds.forEach(seed => {
+            if (seed.wasChanged)
+            {
+                seed.element.remove();
+                seed.genDisplay();
+            }
         });
     }
 
@@ -266,6 +261,8 @@ class Seed
         this.element.className = 'seed';
         this.element.style.transform = `translate(${x}%, ${y}%) rotate(${degs}deg) scaleY(${scaleY}) scaleX(${scaleX})`;
         this.cavity.element.appendChild(this.element);
+
+        this.wasChanged = false;
     }
 
     constructor(cavity)
