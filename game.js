@@ -20,6 +20,8 @@ function range(start, end) {
     return Array(end - start + 1).fill().map((_, idx) => start + idx)
 }
 
+let curInd = 0;
+
 class Board
 {
     constructor(body, nCavities, nSeeds)
@@ -28,9 +30,6 @@ class Board
 
         this.cavities = [];
         
-
-        this.cavities.push(new Cavity(this, 0, 'c-big c-left'));
-
         this.nCavities = nCavities;
 
         for (let i = 0; i < this.nCavities; i++)
@@ -41,12 +40,17 @@ class Board
         for (let i = 0; i < this.nCavities; i++)
             this.cavities.push(new Cavity(this, nSeeds));
 
+        this.cavities.push(new Cavity(this, 0, 'c-big c-left'));
+
+        console.log(this.cavities);
+
         this.cavitiesIndices = [];
-        this.cavitiesIndices.push(0);
-        let invertedIndices = range(nCavities + 2, nCavities * 2 + 1).reverse();
-        this.cavitiesIndices = this.cavitiesIndices.concat(invertedIndices);
+        let invertedIndices = range(nCavities + 2, nCavities * 2 + 1);
+        this.cavitiesIndices = this.cavitiesIndices.concat(invertedIndices.reverse());
         this.cavitiesIndices.push(nCavities + 1);
+        this.cavitiesIndices.push(0);
         this.cavitiesIndices = this.cavitiesIndices.concat(range(1, nCavities))
+
 
     }
 
@@ -110,16 +114,19 @@ class Board
 
         for (let i = 0; i < sowableCavities.length; i++) {
             const cavity = sowableCavities[i];
+            console.log(`On cavity ${cavity.index}: storage(${cavity.isStorage()}, player(${cavity.player()}))`)
             //mustn't sow on the adversary's storage cavity
             if(cavity.isStorage() && cavity.player() != sourceCavity.player()) {
-                sowableCavities.pop(cavity);
+                sowableCavities.splice(i, 1);
                 break;
             }
         }
 
+        console.log(sowableCavities);
+
         //sow
         let targetCavity;
-        let targetCavityIdx = this.cavities.indexOf(sourceCavity);
+        let targetCavityIdx = sowableCavities.indexOf(sourceCavity);
 
         while (sourceCavity.seeds.length)
         {
@@ -166,11 +173,13 @@ class Board
 }
 
 class Cavity
-{
+{   
     genDisplay()
     {
         this.element = document.createElement('div');
         this.element.className = this.specifier ? 'cavity ' + this.specifier : 'cavity';
+        this.element.innerText = this.index;
+        this.element.style = "color: white;"
         this.board.element.appendChild(this.element);
 
         this.seeds.forEach(seed => {
@@ -184,7 +193,7 @@ class Cavity
     {
         if (this.isStorage())
             return;
-        
+
         this.element.addEventListener('click', function() {
             board.sow(this);
             board.updateDisplay();
@@ -239,6 +248,8 @@ class Cavity
             let seed = new Seed(this);
             this.seeds.push(seed);
         }
+
+        this.index = curInd++;
     }
 }
 
