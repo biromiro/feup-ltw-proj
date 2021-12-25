@@ -762,16 +762,17 @@ table th {
 }
 
 .messages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin: 0.5em;
     overflow-y: auto;
     height: 6.5em;
     font-size: 1em;
 }
 
-.messages div {
-    font-size: 1.5em;
-    padding: 0.1em;
-    margin: 0.5em;
+.messages p.error {
+    color: red;
 }
 
 .game-code-wrapper,

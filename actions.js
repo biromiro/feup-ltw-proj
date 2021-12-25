@@ -10,6 +10,7 @@ let activeSession = {
 
 let currentGameCode = '';
 let currentGroupCode = 0;
+let messages = document.getElementById('messages');
 
 export function handleError(data, container) {
     if(!container) return;
@@ -20,6 +21,19 @@ export function handleError(data, container) {
         anim.cancel();
         anim.play();
       });
+}
+
+export function newMessage(data) {
+    let tag = document.createElement("p");
+    let text = data.error ? data.error : data.message;
+
+    if(data.error) {
+        tag.classList.add('error');
+    }
+
+    tag.innerText = text;
+
+    messages.appendChild(tag);
 }
 
 export async function getLeaderboard(container) {
@@ -183,4 +197,20 @@ export function endGame() {
     aux.clearInnerContent(gameArea);
     gameArea.innerHTML = "<h1>No game is currently being played.</h1>"
     console.log('handled');
+}
+
+export async function notify(cavityNumber) {
+    if(!activeSession.valid) return handleError({error: 'You should be logged in - please reload the page.'}, gameLeaveErrorMessage);
+
+    let params = {
+        'nick' : activeSession.nick,
+        'password' : activeSession.password,
+        'game': currentGameCode,
+        'move': cavityNumber
+    }
+
+    const notify = req.POSTRequest(params, 'notify');
+    notify.then(function(data) {
+        if(data.error) return newMessage(data);
+    });
 }
