@@ -49,7 +49,6 @@ export class Board
         this.cavitiesIndices.push(0);
         this.cavitiesIndices = this.cavitiesIndices.concat(range(1, nCavities))
 
-
     }
 
     genDisplay()
@@ -74,6 +73,8 @@ export class Board
         this.cavities.forEach(cavity => {
             cavity.updateDisplay();
         });
+
+
     }
 
     take(n, from, to)
@@ -172,6 +173,9 @@ class Cavity
         this.seeds.forEach(seed => {
             seed.genDisplay();
         });
+
+        this.updateScore();
+
     }
     
     hookOnClick()
@@ -194,6 +198,16 @@ class Cavity
                 seed.genDisplay();
             }
         });
+
+        this.updateScore();
+    }
+
+    updateScore() {
+        if(this.isStorage() && this.player() == Player.Player1) {
+            document.getElementById('p1-points').innerText = this.element.childElementCount;
+        } else if (this.isStorage() && this.player() == Player.Player2) {
+            document.getElementById('p2-points').innerText = this.element.childElementCount;
+        }
     }
 
     player()
