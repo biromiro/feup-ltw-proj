@@ -1,3 +1,7 @@
+import * as tog from './toggles.js';
+import * as act from './actions.js';
+import * as aux from './auxiliar.js';
+
 let board = undefined;
 
 const Player = {
@@ -58,6 +62,51 @@ export class Board
         this.cavitiesIndices = this.cavitiesIndices.concat(range(1, nCavities));
     }
 
+    update(boardInfo, player) {
+        console.log(boardInfo);
+
+        let playerArr = [];
+        let advArr = [];
+
+        Object.entries(boardInfo.sides).forEach((entry) => {
+            const [key, value] = entry;
+            if(key == player) {
+                playerArr = value.pits;
+                playerArr.push(value.store);
+            } else {
+                advArr = value.pits;
+                advArr.push(value.store);
+            }
+        });
+
+        let seedVals = playerArr.concat(advArr);
+
+        let movedSeeds = [];
+        for(let i = 0; i < seedVals.length; i++) {
+            let newSeedNum = seedVals.at(i);
+            let cavity = this.cavities.at(i);
+            if(newSeedNum < cavity.seeds.length)
+                movedSeeds = movedSeeds.concat(this.take(cavity.seeds.length - newSeedNum, cavity));
+        }
+
+        for(let i=0; i < seedVals.length; i++) {
+            let newSeedNum = seedVals.at(i);
+            let cavity = this.cavities.at(i);
+            if(newSeedNum > cavity.seeds.length)
+                this.put(newSeedNum - cavity.seeds.length, movedSeeds, cavity);
+        }
+
+        this.updateDisplay();
+    }
+
+    updateCavity(cavity, newValue) {
+        let numSeeds = cavity.seeds.length;
+        if(numSeeds < newValue)
+            this.put(newValue - numSeeds, cavity);
+        else if(numSeeds > newValue)
+            this.take(numSeeds - newValue, cavity);
+    }
+
     fromBoard()
     {
         let newBoard = new Board(null, this.nCavities, 0);
@@ -116,7 +165,7 @@ export class Board
         return sowableCavities;
     }
 
-    take(n, from, to)
+    move(n, from, to)
     {
         for (let i = 0; i < n; i++)
         {
@@ -126,6 +175,23 @@ export class Board
 
             movedSeed.wasChanged = true;
         }
+    }
+
+    take(n, cavity) {
+        let arr = [];
+        for (let i = 0; i < n; i++)
+            arr.push(cavity.seeds.pop());
+        return arr;
+    }
+
+    put(n, seeds, cavity) {
+        for (let i = 0; i < n; i++)
+        {
+            cavity.seeds.push(seeds[i]);
+            seeds[i].cavity = cavity;
+            seeds[i].wasChanged = true;
+        }
+        seeds.splice(0, n);
     }
 
     sow(sourceCavity, player)
@@ -166,7 +232,7 @@ export class Board
         {
             targetCavityIdx = (targetCavityIdx + 1) % targetCavities.length;
             targetCavity = targetCavities[targetCavityIdx];
-            this.take(1, sourceCavity, targetCavity);
+            this.move(1, sourceCavity, targetCavity);
         }
 
         if (targetCavity.player() == sourceCavity.player() && targetCavity.isStorage())
@@ -177,11 +243,11 @@ export class Board
             const storageIdx = player == Player.Player1 ? this.nCavities : 2 * this.nCavities + 1;
             let storage = this.cavities[storageIdx];
 
-            this.take(1, targetCavity, storage);
+            this.move(1, targetCavity, storage);
 
             const cavityIdx = this.cavities.indexOf(targetCavity);
-            let toTake = this.cavities[this.nCavities*2 - cavityIdx];
-            this.take(toTake.seeds.length, toTake, storage);
+            let toMove = this.cavities[this.nCavities*2 - cavityIdx];
+            this.move(toMove.seeds.length, toMove, storage);
         }
     }
 
@@ -286,10 +352,13 @@ class Cavity
         if (this.player() == Player.Player2 || this.isStorage())
             return;
 
-        this.element.obj = this;
         this.element.addEventListener('click', () => {
-            board.turn(this);
-            board.updateDisplay();
+            if(tog.isAIGameType()) {
+                board.turn(this);
+                board.updateDisplay();
+            } else {
+                act.notify(board.cavities.indexOf(this));
+            }
         });
     }
 
@@ -362,7 +431,7 @@ class Cavity
         {
             let seed = new Seed(this);
             this.seeds.push(seed);
-        }
+        }     
     }
 }
 

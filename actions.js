@@ -10,11 +10,12 @@ let activeSession = {
 
 let currentGameCode = '';
 let currentGroupCode = 0;
+let currentBoard = undefined;
 let messages = document.getElementById('messages');
+let getUpdates = undefined;
 
 export function handleError(data, container) {
     if(!container) return;
-    console.log("?");
     container.innerText = data.error;
 
     container.getAnimations().forEach((anim) => {
@@ -48,8 +49,6 @@ export async function getLeaderboard(container) {
                       </tr>`
 
         container.innerHTML = header;
-
-        console.log(data);
 
         let ranking = data.ranking;
 
@@ -143,7 +142,6 @@ export async function join(gameStartForm, gameStartErrorMessage) {
     const groupCode = gameStartForm.group;
     if(groupCode) params['group'] = groupCode;
 
-    console.log(params);
     const join = req.POSTRequest(params, 'join');
     join.then(function(data) {
         if(data.error) return handleError(data, gameStartErrorMessage);
@@ -151,7 +149,23 @@ export async function join(gameStartForm, gameStartErrorMessage) {
         currentGroupCode = groupCode;
         
         startGame(params);
+        getUpdates = req.setServerSentUpdates(activeSession.nick, currentGameCode);
+        setUpdateResponse();
+
+        console.log(`${activeSession.nick} joined the game ${currentGameCode}, which has ${gameStartForm.size} cavities, with ${gameStartForm.initial} cavities each.`);
     });
+}
+
+function setUpdateResponse() {
+    getUpdates.onmessage = (event) => {
+        let data = JSON.parse(event.data);
+        console.log(data.board);
+        currentBoard.update(data.board, activeSession.nick);
+    }
+
+    getUpdates.onerror = (error) => {
+        console.log(error);
+    }
 }
 
 export function startGame(params) {
@@ -161,9 +175,9 @@ export function startGame(params) {
     const gameArea = document.getElementsByClassName('board-area')[0];
     aux.clearInnerContent(gameArea);
     console.log(`New Board with: ${params.size} cavities per side and ${params.initial} seeds per cavity.`)
-    const board = new game.Board(gameArea, parseInt(params.size), parseInt(params.initial), params.AILevel);
+    currentBoard = new game.Board(gameArea, parseInt(params.size), parseInt(params.initial), params.AILevel);
 
-    board.genDisplay();
+    currentBoard.genDisplay();
 }
 
 export async function leave(gameLeaveErrorMessage) {
@@ -177,7 +191,6 @@ export async function leave(gameLeaveErrorMessage) {
         'group': currentGroupCode
     }
 
-    console.log(params);
     const join = req.POSTRequest(params, 'leave');
     join.then(function(data) {
         if(data.error) return handleError(data, gameLeaveErrorMessage);
@@ -185,8 +198,15 @@ export async function leave(gameLeaveErrorMessage) {
         currentGameCode = '';
         currentGroupCode = 0;
 
+        console.log("left the game");
+
         endGame();
+        stopUpdates();
     });
+}
+
+function stopUpdates() {
+    getUpdates.close();
 }
 
 export function endGame() {
@@ -197,7 +217,6 @@ export function endGame() {
     const gameArea = document.getElementsByClassName('board-area')[0];
     aux.clearInnerContent(gameArea);
     gameArea.innerHTML = "<h1>No game is currently being played.</h1>"
-    console.log('handled');
 }
 
 export async function notify(cavityNumber) {

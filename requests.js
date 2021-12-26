@@ -11,3 +11,9 @@ export function POSTRequest(body, path) {
 
     return fetch(request).then(response => { return response.json(); })
 }
+
+export function setServerSentUpdates(nick, gameCode) {
+    const getUpdate = new EventSource(serverURL + `update?nick=${nick}&game=${gameCode}`);
+
+    return getUpdate;
+}

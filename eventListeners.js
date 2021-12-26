@@ -117,8 +117,6 @@ gameStartForm.addEventListener('submit', (event) => {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    console.log("joined");
-
     let formParams = {
         'size': gameStartForm['num-cavities'].value,
         'initial': gameStartForm['num-init-seeds'].value,
@@ -139,7 +137,6 @@ const gameLeaveButton = document.getElementById('game-leave-button');
 const gameLeaveErrorMessage = document.getElementById('wrong-form-params-summary');
 
 gameLeaveButton.addEventListener('click', () => {
-    console.log("left");
     if(tog.isPVPGameType()) act.leave(gameLeaveErrorMessage);
     else if(tog.isAIGameType) act.endGame();
 });
