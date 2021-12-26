@@ -209,6 +209,24 @@ function stopUpdates() {
     getUpdates.close();
 }
 
+export function returnWinner(isAI, winner) {
+    preGameContainer.style.display = 'flex';
+    preGameContainer.style += "flex-direction: column;"
+    inGameContainer.style.display = 'none';
+
+    const gameArea = document.getElementsByClassName('board-area')[0];
+    aux.clearInnerContent(gameArea);
+    if (isAI) {
+        if(winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations, ${winner}!</h1>`
+        else gameArea.innerHTML = `<h1>You lost! Bots are tough, aren't they?</h1>`
+    } else {
+        if(winner == null) gameArea.innerHTML = "<h1>There was a tie!</h1>"
+        else if(winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations, ${winner}!</h1>`
+        else gameArea.innerHTML = `<h1>You lost. ${winner} wins!</h1>`
+    }
+
+}
+
 export function endGame() {
     preGameContainer.style.display = 'flex';
     preGameContainer.style += "flex-direction: column;"
@@ -217,6 +235,8 @@ export function endGame() {
     const gameArea = document.getElementsByClassName('board-area')[0];
     aux.clearInnerContent(gameArea);
     gameArea.innerHTML = "<h1>No game is currently being played.</h1>"
+
+    aux.clearInnerContent(messages);
 }
 
 export async function notify(cavityNumber) {
