@@ -97,6 +97,9 @@ export class Board
                 this.put(newSeedNum - cavity.seeds.length, movedSeeds, cavity);
         }
 
+        if(boardInfo.turn == player) act.newMessage({message: `It's your turn.`})
+        else act.newMessage({message: `It's ${boardInfo.turn} turn.`})
+
         this.updateDisplay();
     }
 
