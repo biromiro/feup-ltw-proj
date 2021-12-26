@@ -183,10 +183,11 @@ class Cavity
         if (this.isStorage())
             return;
 
-        this.element.addEventListener('click', function() {
+        this.element.obj = this;
+        this.element.addEventListener('click', () => {
             board.sow(this);
             board.updateDisplay();
-        }.bind(this));
+        });
     }
 
     updateDisplay()
