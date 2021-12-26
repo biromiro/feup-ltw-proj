@@ -64,7 +64,7 @@ export class Board
         
         newBoard.cavities = [];
         this.cavities.forEach(cavity => {
-            let cavityCopy = cavity.fromCavity(this);
+            let cavityCopy = cavity.fromCavity(newBoard);
             newBoard.cavities.push(cavityCopy);
         });
         newBoard.nCavities = this.nCavities;
