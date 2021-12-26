@@ -124,9 +124,10 @@ gameStartForm.addEventListener('submit', (event) => {
         'AILevel': gameStartForm['ai-level'].value
     }
 
-    if(tog.isAIGameType()) 
+    if(tog.isAIGameType()) {
         act.startGame(formParams);
-    else if(tog.isPVPGameType()) {
+        act.changeNicknames();
+    } else if(tog.isPVPGameType()) {
         act.join(formParams, gameStartErrorMessage);
     } else act.handleError({'error': 'Game Type is still not defined.'}, gameStartErrorMessage);
 

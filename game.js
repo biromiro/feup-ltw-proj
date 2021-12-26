@@ -103,14 +103,6 @@ export class Board
         this.updateDisplay();
     }
 
-    updateCavity(cavity, newValue) {
-        let numSeeds = cavity.seeds.length;
-        if(numSeeds < newValue)
-            this.put(newValue - numSeeds, cavity);
-        else if(numSeeds > newValue)
-            this.take(numSeeds - newValue, cavity);
-    }
-
     fromBoard()
     {
         let newBoard = new Board(null, this.nCavities, 0);

@@ -8,11 +8,18 @@ let activeSession = {
     'password' : ""
 }
 
-let currentGameCode = '';
-let currentGroupCode = 0;
-let currentBoard = undefined;
+let currentGame = {
+    gameCode: '',
+    groupCode: 0,
+    board: undefined,
+    adversary: undefined
+}
+
 let messages = document.getElementById('messages');
 let getUpdates = undefined;
+
+let playerName = document.getElementById('p1-name');
+let adversaryName = document.getElementById('p2-name');
 
 export function handleError(data, container) {
     if(!container) return;
@@ -35,6 +42,11 @@ export function newMessage(data) {
     tag.innerText = text;
 
     messages.appendChild(tag);
+}
+
+export function changeNicknames(adversary) {
+    playerName.innerText = activeSession.nick ? activeSession.nick : 'Player';
+    adversaryName.innerText = adversary ? adversary : 'Computer';
 }
 
 export async function getLeaderboard(container) {
@@ -145,27 +157,49 @@ export async function join(gameStartForm, gameStartErrorMessage) {
     const join = req.POSTRequest(params, 'join');
     join.then(function(data) {
         if(data.error) return handleError(data, gameStartErrorMessage);
-        currentGameCode = data.game;
-        currentGroupCode = groupCode;
+        currentGame.gameCode = data.game;
+        currentGame.groupCode = groupCode;
         
-        startGame(params);
-        getUpdates = req.setServerSentUpdates(activeSession.nick, currentGameCode);
-        setUpdateResponse();
+        getUpdates = req.setServerSentUpdates(activeSession.nick, currentGame.gameCode);
+        setUpdateResponse(params);
 
-        console.log(`${activeSession.nick} joined the game ${currentGameCode}, which has ${gameStartForm.size} cavities, with ${gameStartForm.initial} cavities each.`);
+        waiting();
+
+        console.log(`${activeSession.nick} joined the game ${currentGame.gameCode}, which has ${gameStartForm.size} cavities, with ${gameStartForm.initial} cavities each.`);
     });
 }
 
-function setUpdateResponse() {
+function setUpdateResponse(params) {
     getUpdates.onmessage = (event) => {
         let data = JSON.parse(event.data);
-        console.log(data.board);
-        currentBoard.update(data.board, activeSession.nick);
+
+        if(!currentGame.board) startGame(params);
+        currentGame.board.update(data.board, activeSession.nick);
+
+        if(!currentGame.adversary) {
+            Object.keys(data.board.sides).forEach((key) => {
+                if(key != player)
+                    currentGame.adversary = key;
+            });
+
+            changeNicknames(currentGame.adversary);
+        }
     }
 
     getUpdates.onerror = (error) => {
         console.log(error);
     }
+}
+
+
+export function waiting() {
+    preGameContainer.style.display = 'flex';
+    preGameContainer.style += "flex-direction: column;"
+    inGameContainer.style.display = 'none';
+
+    const gameArea = document.getElementsByClassName('board-area')[0];
+    aux.clearInnerContent(gameArea);
+    gameArea.innerHTML = "<h1>Waiting for another player to join...</h1>"
 }
 
 export function startGame(params) {
@@ -175,9 +209,9 @@ export function startGame(params) {
     const gameArea = document.getElementsByClassName('board-area')[0];
     aux.clearInnerContent(gameArea);
     console.log(`New Board with: ${params.size} cavities per side and ${params.initial} seeds per cavity.`)
-    currentBoard = new game.Board(gameArea, parseInt(params.size), parseInt(params.initial), params.AILevel);
+    currentGame.board = new game.Board(gameArea, parseInt(params.size), parseInt(params.initial), params.AILevel);
 
-    currentBoard.genDisplay();
+    currentGame.board.genDisplay();
 }
 
 export async function leave(gameLeaveErrorMessage) {
@@ -187,16 +221,15 @@ export async function leave(gameLeaveErrorMessage) {
     let params = {
         'nick' : activeSession.nick,
         'password' : activeSession.password,
-        'game': currentGameCode,
-        'group': currentGroupCode
+        'game': currentGame.gameCode,
+        'group': currentGame.groupCode
     }
 
     const join = req.POSTRequest(params, 'leave');
     join.then(function(data) {
         if(data.error) return handleError(data, gameLeaveErrorMessage);
 
-        currentGameCode = '';
-        currentGroupCode = 0;
+        currentGame = {};
 
         console.log("left the game");
 
@@ -245,7 +278,7 @@ export async function notify(cavityNumber) {
     let params = {
         'nick' : activeSession.nick,
         'password' : activeSession.password,
-        'game': currentGameCode,
+        'game': currentGame.gameCode,
         'move': cavityNumber
     }
 
