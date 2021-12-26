@@ -161,7 +161,8 @@ export function startGame(params) {
     const gameArea = document.getElementsByClassName('board-area')[0];
     aux.clearInnerContent(gameArea);
     console.log(`New Board with: ${params.size} cavities per side and ${params.initial} seeds per cavity.`)
-    const board = new game.Board(gameArea, parseInt(params.size), parseInt(params.initial));
+    const board = new game.Board(gameArea, parseInt(params.size), parseInt(params.initial), params.AILevel);
+
     board.genDisplay();
 }
 
