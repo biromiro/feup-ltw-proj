@@ -5,17 +5,10 @@ const Player = {
     Player2 : 'Player2',
 }
 
-const TurnOutcome = {
-    InvalidSourceCavity: 'InvalidSourceCavity',
-    SwapPlayer: 'SwapPlayer',
-    SamePlayer: 'SamePlayer',
-}
-
 const SowOutcome = {
-    PlayAgain: 'PlayAgain',
-    TakeSeeds: 'TakeSeeds',
     InvalidSourceCavity: 'InvalidSourceCavity',
     EmptySourceCavity: 'EmptySourceCavity',
+    PlayAgain: 'PlayAgain',
 };
 
 function range(start, end) {
@@ -27,6 +20,8 @@ export class Board
     constructor(body, nCavities, nSeeds)
     {
         this.body = body;
+
+        this.player = Player.Player1;
 
         this.cavities = [];
         
@@ -47,8 +42,7 @@ export class Board
         this.cavitiesIndices = this.cavitiesIndices.concat(invertedIndices.reverse());
         this.cavitiesIndices.push(nCavities + 1);
         this.cavitiesIndices.push(0);
-        this.cavitiesIndices = this.cavitiesIndices.concat(range(1, nCavities))
-
+        this.cavitiesIndices = this.cavitiesIndices.concat(range(1, nCavities));
     }
 
     genDisplay()
@@ -77,6 +71,13 @@ export class Board
 
     }
 
+    swapPlayer() {
+        if (this.player == Player.Player1)
+            this.player = Player.Player2;
+        else
+            this.player = Player.Player1;
+    }
+
     take(n, from, to)
     {
         for (let i = 0; i < n; i++)
@@ -91,18 +92,25 @@ export class Board
 
     sow(sourceCavity)
     {
+        //mustn't sow from enemy cavitites
+        if (sourceCavity.player() != this.player)
+        {
+            alert('Wrong side!')
+            return SowOutcome.InvalidSourceCavity;
+        }
+
         //mustn't sow from storage cavities
         if (sourceCavity.isStorage())
         {
-            alert('oopsie!');
-            return {outcome : SowOutcome.InvalidSourceCavity};
+            alert('Cannot sow from storage cavities!');
+            return SowOutcome.InvalidSourceCavity;
         }
 
         //mustn't sow from empty cavities
         if (sourceCavity.empty())
         {
-            alert('oopsie daisy!');
-            return {outcome : SowOutcome.EmptySourceCavity};
+            alert('Cannot sow from empty cavities!');
+            return SowOutcome.EmptySourceCavity;
         }
 
         const sowableCavities = [...this.cavities];
@@ -127,38 +135,21 @@ export class Board
         }
 
         if (targetCavity.player() == sourceCavity.player() && targetCavity.isStorage())
-            return {outcome : SowOutcome.PlayAgain};
+            return SowOutcome.PlayAgain;
         
-        if (targetCavity.player() == sourceCavity.player() && targetCavity.empty())
-            return {outcome : SowOutcome.TakeSeeds, cavity : targetCavityIdx};
-    }
-
-    turn(player, sourceCavity)
-    {
-        if (sourceCavity.player() != player)
-            return TurnOutcome.InvalidSourceCavity;
-        
-        const result = this.sow(sourceCavity);
-
-        if (result == null)
-            return TurnOutcome.SwapPlayer;
-
-        if (result.outcome == SowOutcome.PlayAgain)
-            return TurnOutcome.SamePlayer;
-        
-        if(result.outcome == SowOutcome.TakeSeeds)
+        if (targetCavity.player() == sourceCavity.player() && targetCavity.seeds.length == 1)
         {
-            const storageIdx = player == Player.Player1 ? 0 : this.nCavities + 1;
+            const storageIdx = this.player == Player.Player1 ? this.nCavities : 2* this.nCavities + 1;
             let storage = this.cavities[storageIdx];
 
-            this.take(1, result.cavity, storage);
+            this.take(1, targetCavity, storage);
 
-            const cavityIdx = this.cavities.indexOf(result.cavity);
-            let toTake = this.cavities[this.cavities.length - cavityIdx + 1];
+            const cavityIdx = this.cavities.indexOf(targetCavity);
+            let toTake = this.cavities[this.nCavities*2 - cavityIdx];
             this.take(toTake.seeds.length, toTake, storage);
-
-            return TurnOutcome.SwapPlayer;
         }
+
+        this.swapPlayer();
     }
 }
 
@@ -175,7 +166,6 @@ class Cavity
         });
 
         this.updateScore();
-
     }
     
     hookOnClick()
