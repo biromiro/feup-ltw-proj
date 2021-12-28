@@ -22,6 +22,7 @@ let playerName = document.getElementById('p1-name');
 let adversaryName = document.getElementById('p2-name');
 
 export function handleError(data, container) {
+    console.log(container);
     if(!container) return;
     container.innerText = data.error;
 
@@ -95,7 +96,7 @@ export async function login(loginForm, loginErrorMessage) {
     }
     const login = req.POSTRequest(params, 'register');
     login.then(function(data) {
-        if(data.error) return act.handleError(data, loginErrorMessage);
+        if(data.error) return handleError(data, loginErrorMessage);
         activeSession.valid = true;
         activeSession.nick = params.nick;
         activeSession.password = params.password;
@@ -115,7 +116,7 @@ export async function register(signupForm, signupErrorMessage) {
     }
     const signup = req.POSTRequest(params, 'register');
     signup.then(function(data) {
-        if(data.error) return act.handleError(data, signupErrorMessage);
+        if(data.error) return handleError(data, signupErrorMessage);
 
         activeSession.valid = true;
         activeSession.nick = params.nick;

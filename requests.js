@@ -9,7 +9,7 @@ export function POSTRequest(body, path) {
 
     let request = new Request(serverURL + path, options);
 
-    return fetch(request).then(response => { return response.json(); })
+    return fetch(request).then(response => { return response.json(); }).catch((error) => {return {'error': error}; });
 }
 
 export function setServerSentUpdates(nick, gameCode) {

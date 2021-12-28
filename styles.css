@@ -54,6 +54,7 @@ body {
     min-height: 100vh;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
+    color: var(--main-text-color);
 }
 
 /* A elements that don't have a class get default styles */
@@ -120,7 +121,6 @@ select {
     justify-content: space-between;
     align-items: center;
     background-color: var(--main-bg-color);
-    color: var(--main-text-color);
     height: 15vh;
 }
 
