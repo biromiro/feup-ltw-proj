@@ -185,7 +185,7 @@ export function returnWinner(isAI, winner) {
     const gameArea = document.getElementsByClassName('board-area')[0];
     aux.clearInnerContent(gameArea);
     if (isAI) {
-        if(winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations, ${winner}!</h1>`
+        if(winner) gameArea.innerHTML = `<h1>You won! Congratulations${activeSession.nick ? ', ' + activeSession.nick : ''}!</h1>`
         else gameArea.innerHTML = `<h1>You lost! Bots are tough, aren't they?</h1>`
     } else {
         if(winner == null) gameArea.innerHTML = "<h1>There was a tie!</h1>"

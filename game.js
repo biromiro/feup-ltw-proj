@@ -261,9 +261,10 @@ export class Board
             if (simBoard.AIDepth != 0) //recursive structure
             {
                 simBoard.AIDepth = simBoard.AIDepth - 1;
-                if (playAgain != SowOutcome.PlayAgain) //swap players if adequate
-                    player = player == Player.Player1 ? Player.Player2 : Player.Player1;
-                let bestResult = simBoard.getAIBestOutcome(player); //get best recursive result
+                let bestResult = simBoard.getAIBestOutcome(
+                    playAgain != SowOutcome.PlayAgain ?
+                    (player == Player.Player1 ? Player.Player2 : Player.Player1) : player
+                ); //get best recursive result
                 bestLocalOutcome.p1 = bestResult.p1; //best local outcome is determined by best next option
                 bestLocalOutcome.p2 = bestResult.p2;
             }
@@ -272,7 +273,7 @@ export class Board
 
         let bestOutcome = outcomes[0];
         outcomes.forEach(outcome => {
-            if (player == Player.Player1 && outcome.p1 > bestOutcome.p1)
+            if (player == Player.Player1 && outcome.p1 < bestOutcome.p1)
                 bestOutcome = outcome;
                 
             else if (player == Player.Player2 && outcome.p2 > bestOutcome.p2)
@@ -284,14 +285,6 @@ export class Board
 
     turnAI()
     {
-        let sowableCavities = this.getSowableCavities(Player.Player2);
-
-        if(sowableCavities.length == 0)
-        {
-            alert(`The AI can't sow, so the game is over! You got: ${this.getPoints(Player.Player1)} points!`);
-            return;
-        }
-
         let bestOutcome = this.getAIBestOutcome(Player.Player2);
 
         console.log(bestOutcome);
@@ -301,8 +294,11 @@ export class Board
         if (result == SowOutcome.PlayAgain)
         {
             console.log('Playing again!');
+            if(this.checkEndGame()) return;
             this.turnAI();
-        }       
+        }
+        
+        return this.checkEndGame();
     }
 
     turn(sourceCavity)
@@ -310,18 +306,37 @@ export class Board
         let result = this.sow(sourceCavity, Player.Player1);
 
         if (result == SowOutcome.EmptySourceCavity || result == SowOutcome.InvalidSourceCavity || result == SowOutcome.PlayAgain)
-            return;
+            return this.checkEndGame();
         
-        if (this.AIDepth != null)
+        if (this.AIDepth != null){
+            if(this.checkEndGame()) return;
             this.turnAI();
-
+        }
         else
             alert('Other player is playing...');
-        
-        let sowableCavities = this.getSowableCavities(Player.Player1);
+    }
 
-        if (sowableCavities.length == 0)
-            alert(`You can't sow, so the game is over! You got: ${this.getPoints(Player.Player1)} points!`);
+    checkEndGame(player) {
+        let sowableCavitiesP1 = this.getSowableCavities(Player.Player1);
+        let sowableCavitiesP2 = this.getSowableCavities(Player.Player2);
+
+        if(sowableCavitiesP1.length == 0 || sowableCavitiesP2.length == 0) {
+               this.collectSeeds(sowableCavitiesP1, sowableCavitiesP2);
+               act.returnWinner(true, player == Player.Player1);
+               return true;
+        }
+
+        return false;
+    }
+
+    collectSeeds(sowableCavitiesP1, sowableCavitiesP2) {
+        sowableCavitiesP1.forEach(cavity => {
+            this.move(cavity.length, cavity, this.cavities.at(this.nCavities));
+        });
+
+        sowableCavitiesP2.forEach(cavity => {
+            this.move(cavity.length, cavity, this.cavities.at(this.nCavities * 2 + 1));
+        });
     }
 }
 
