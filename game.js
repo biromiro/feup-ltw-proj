@@ -63,9 +63,6 @@ export class Board
     }
 
     update(boardInfo, player) {
-
-        if(boardInfo.winner) return act.returnWinner(false, boardInfo.winner);
-
         let playerArr = [];
         let advArr = [];
 

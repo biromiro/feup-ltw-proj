@@ -39,10 +39,17 @@ export function newMessage(data) {
     if(data.error) {
         tag.classList.add('error');
     }
+    tag.style.padding = "3px";
+    tag.style.border = "thin solid var(--main-text-color)";
+    tag.style.borderRadius = "25px";
+    setTimeout(() => {
+        tag.style.border = "none";
+        tag.style.padding = "0px";
+    }, 1000);
 
     tag.innerText = text;
 
-    messages.appendChild(tag);
+    messages.prepend(tag);
 }
 
 export function changeNicknames(adversary) {
@@ -170,16 +177,41 @@ export async function join(gameStartForm, gameStartErrorMessage) {
     });
 }
 
+export function returnWinner(isAI, winner) {
+    preGameContainer.style.display = 'flex';
+    preGameContainer.style += "flex-direction: column;"
+    inGameContainer.style.display = 'none';
+
+    const gameArea = document.getElementsByClassName('board-area')[0];
+    aux.clearInnerContent(gameArea);
+    if (isAI) {
+        if(winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations, ${winner}!</h1>`
+        else gameArea.innerHTML = `<h1>You lost! Bots are tough, aren't they?</h1>`
+    } else {
+        if(winner == null) gameArea.innerHTML = "<h1>There was a tie!</h1>"
+        else if(winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations, ${winner}!</h1>`
+        else gameArea.innerHTML = `<h1>You lost. ${winner} wins!</h1>`
+    }
+
+    currentGame = {};
+    stopUpdates();
+    setTimeout( () => {endGame();}, 5000);
+}
+
 function setUpdateResponse(params) {
     getUpdates.onmessage = (event) => {
+        console.log(event.data);
+
         let data = JSON.parse(event.data);
 
         if(!currentGame.board) startGame(params);
+        if(data.winner) return returnWinner(false, data.winner);
+
         currentGame.board.update(data.board, activeSession.nick);
 
         if(!currentGame.adversary) {
             Object.keys(data.board.sides).forEach((key) => {
-                if(key != player)
+                if(key != activeSession.nick)
                     currentGame.adversary = key;
             });
 
@@ -229,7 +261,7 @@ export async function leave(gameLeaveErrorMessage) {
     const join = req.POSTRequest(params, 'leave');
     join.then(function(data) {
         if(data.error) return handleError(data, gameLeaveErrorMessage);
-
+        
         currentGame = {};
 
         console.log("left the game");
@@ -241,24 +273,6 @@ export async function leave(gameLeaveErrorMessage) {
 
 function stopUpdates() {
     getUpdates.close();
-}
-
-export function returnWinner(isAI, winner) {
-    preGameContainer.style.display = 'flex';
-    preGameContainer.style += "flex-direction: column;"
-    inGameContainer.style.display = 'none';
-
-    const gameArea = document.getElementsByClassName('board-area')[0];
-    aux.clearInnerContent(gameArea);
-    if (isAI) {
-        if(winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations, ${winner}!</h1>`
-        else gameArea.innerHTML = `<h1>You lost! Bots are tough, aren't they?</h1>`
-    } else {
-        if(winner == null) gameArea.innerHTML = "<h1>There was a tie!</h1>"
-        else if(winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations, ${winner}!</h1>`
-        else gameArea.innerHTML = `<h1>You lost. ${winner} wins!</h1>`
-    }
-
 }
 
 export function endGame() {
