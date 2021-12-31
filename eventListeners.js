@@ -139,7 +139,7 @@ const gameLeaveErrorMessage = document.getElementById('wrong-form-params-summary
 
 gameLeaveButton.addEventListener('click', () => {
     if(tog.isPVPGameType()) act.leave(gameLeaveErrorMessage);
-    else if(tog.isAIGameType) act.endGame();
+    else if(tog.isAIGameType()) act.endGame();
 });
 
 const errorMessages = [].slice.call(document.getElementsByClassName('error-message'));

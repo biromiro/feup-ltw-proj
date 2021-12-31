@@ -250,6 +250,7 @@ export function startGame(params) {
 export async function leave(gameLeaveErrorMessage) {
 
     if(!activeSession.valid) return handleError({error: 'You should be logged in - please reload the page.'}, gameLeaveErrorMessage);
+    console.log("left the game");
 
     let params = {
         'nick' : activeSession.nick,
@@ -267,15 +268,17 @@ export async function leave(gameLeaveErrorMessage) {
         console.log("left the game");
 
         endGame();
-        stopUpdates();
     });
 }
 
 function stopUpdates() {
+    console.log("closed");
     getUpdates.close();
 }
 
 export function endGame() {
+    console.log("game end");
+
     preGameContainer.style.display = 'flex';
     preGameContainer.style += "flex-direction: column;"
     inGameContainer.style.display = 'none';
