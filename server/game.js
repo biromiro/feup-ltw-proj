@@ -7,6 +7,7 @@ const SowOutcome = {
     InvalidSourceCavity: 'InvalidSourceCavity',
     EmptySourceCavity: 'EmptySourceCavity',
     PlayAgain: 'PlayAgain',
+    GameOver: 'GameOver'
 };
 
 function range(start, end) {
@@ -39,27 +40,19 @@ class Board
         this.cavitiesIndices = this.cavitiesIndices.concat(range(1, nCavities));
     }
 
-    constructor(board) {
-
-        this.cavities = [];
-        
-        this.nCavities = nCavities;
-        
-        for (let i = 0; i < this.nCavities; i++)
-            this.cavities.push(new Cavity(this, nSeeds));
-        
-        this.cavities.push(new Cavity(this, 0));
-        
-        for (let i = 0; i < this.nCavities; i++)
-            this.cavities.push(new Cavity(this, nSeeds));
-
-        this.cavities.push(new Cavity(this, 0));
-    }
-
     getPoints(player)
     {
         let storageIdx = player == Player.Player1 ? this.nCavities : 2 * this.nCavities + 1;
         return this.cavities[storageIdx].seeds.length;
+    }
+
+    setPlayers(player1, player2) {
+        Player.Player1 = player1;
+        Player.Player2 = player2;
+    }
+
+    getOppositePlayer(player) {
+        return player == Player.Player1 ? Player.Player2 : Player.Player1;
     }
 
     getSowableCavities(player)
@@ -144,8 +137,9 @@ class Board
             this.move(1, sourceCavity, targetCavity);
         }
 
-        if (targetCavity.player() == sourceCavity.player() && targetCavity.isStorage())
+        if (targetCavity.player() == sourceCavity.player() && targetCavity.isStorage()){
             return SowOutcome.PlayAgain;
+        }
         
         if (targetCavity.player() == sourceCavity.player() && targetCavity.seeds.length == 1)
         {
@@ -160,36 +154,36 @@ class Board
         }
     }
 
-    turn(sourceCavity)
+    turn(sourceCavity, player)
     {
-        let result = this.sow(sourceCavity, Player.Player1);
+        let result = this.sow(sourceCavity, player);
 
-        if (result == SowOutcome.EmptySourceCavity || result == SowOutcome.InvalidSourceCavity || result == SowOutcome.PlayAgain)
-            return this.checkEndGame();
-        
-        alert('Other player is playing...');
+        if (result == SowOutcome.PlayAgain){
+            return this.checkEndGame(player, result);
+        } else this.checkEndGame(player == Player.Player1 ? Player.Player2 : Player.Player1, result);
     }
 
-    checkEndGame(player) {
+    checkEndGame(player, result) {
         let sowableCavitiesP1 = this.getSowableCavities(Player.Player1);
         let sowableCavitiesP2 = this.getSowableCavities(Player.Player2);
 
-        if(sowableCavitiesP1.length == 0 || sowableCavitiesP2.length == 0) {
+        if((sowableCavitiesP1.length == 0 && player == Player.Player1) || 
+           (sowableCavitiesP2.length == 0 && player == Player.Player2)) {
                this.collectSeeds(sowableCavitiesP1, sowableCavitiesP2);
-               //act.returnWinner(true, player == Player.Player1);
-               return true;
+               console.log('seedsCollected');
+               return SowOutcome.GameOver;
         }
 
-        return false;
+        return result;
     }
 
     collectSeeds(sowableCavitiesP1, sowableCavitiesP2) {
         sowableCavitiesP1.forEach(cavity => {
-            this.move(cavity.length, cavity, this.cavities.at(this.nCavities));
+            this.move(cavity.length, cavity, this.cavities[this.nCavities]);
         });
 
         sowableCavitiesP2.forEach(cavity => {
-            this.move(cavity.length, cavity, this.cavities.at(this.nCavities * 2 + 1));
+            this.move(cavity.length, cavity, this.cavities[this.nCavities * 2 + 1]);
         });
     }
 }
@@ -209,7 +203,8 @@ class Cavity
 
     isStorage()
     {
-        return this.specifier != null;
+        const idx = this.board.cavities.indexOf(this);
+        return idx == this.board.nCavities || idx == (this.board.cavities.length - 1);
     }
 
     empty()
@@ -249,4 +244,4 @@ class Seed
     }
 }
 
-module.exports = {Board}
+module.exports = {Board, Player}

@@ -1,19 +1,23 @@
 const handle = require('./requestHandler.js');
 const http = require('http')
+const url = require('url')
 
 let server = http.createServer(function (req, res) {
-    if (req.url == '/ranking') {
+
+    let receivedURL = url.parse(req.url, true);
+
+    if (receivedURL.pathname == '/ranking') {
         if (req.method != 'POST') return handle.unknownRequest(req, res);
         handle.ranking(res);
 
-    } else if (req.url == '/register'){
+    } else if (receivedURL.pathname == '/register'){
         if (req.method != 'POST') return handle.unknownRequest(req, res);
 
         req.on('data', chunk => {
             handle.register(res, chunk);
         });
 
-    } else if (req.url == '/join') {
+    } else if (receivedURL.pathname == '/join') {
 
         if (req.method != 'POST') return handle.unknownRequest(req, res);
 
@@ -21,21 +25,36 @@ let server = http.createServer(function (req, res) {
             handle.join(res, chunk);
         });
 
-    } else if (req.url == '/leave') {
+    } else if (receivedURL.pathname == '/leave') {
 
-        handle.unknownRequest(req, res);
+        if (req.method != 'POST') return handle.unknownRequest(req, res);
 
-    } else if (req.url == '/notify') {
+        req.on('data', chunk => {
+            handle.leave(res, chunk);
+        });
 
-        handle.unknownRequest(req, res);
+    } else if (receivedURL.pathname == '/notify') {
 
-    } else if (req.url == '/update') {
+        if (req.method != 'POST') return handle.unknownRequest(req, res);
 
-        handle.unknownRequest(req, res);
+        req.on('data', chunk => {
+            handle.notify(res, chunk);
+        });
+
+    } else if (receivedURL.pathname == '/update') {
+
+        if (req.method != 'GET') return handle.unknownRequest(req, res);
+
+        const info = {
+            nick: receivedURL.query.nick,
+            game: receivedURL.query.game
+        }
+
+        handle.update(res, info);
 
     } else handle.unknownRequest(req, res);
 });
 
-server.listen(5000);
+server.listen(8961);
 
-console.log('Node.js web server at port 5000 is running..')
+console.log('Node.js web server at port 8961 is running..')
