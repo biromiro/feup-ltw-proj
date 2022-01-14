@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="toggles.js" defer></script>
+    <script src="requests.js" defer></script>
+    <script src="auxiliar.js" defer></script>
+    <script src="eventListeners.js" defer></script>
+    <script src="game.js" defer></script>
+    <title>Mancala</title>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img class="logo-img" src="img/logo_castanho.svg" alt="Mancala">
+        </div>
+        <a href="#" id="toggle-button" class="toggle-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </a>
+        <div class="navbar-links">
+            <ul>
+                <li><a href="#" class="rules-button">Rules</a></li>
+                <li><a href="#" class="ldb-button">Leaderboard</a></li>
+                <li><a href="#" class="signin-button">Sign In</a></li>
+            </ul>
+        </div>
+
+    </nav>
+
+    <div class="full-pop-up-container rules-container">
+        <div class="background-overlay background-rules"></div>
+        <div class="pop-up-container rules">
+            <a href="#" class="close close-rules"></a>
+            <h2 class="pop-up-main-title">Rules</h2>
+            <div class="pop-up-wrapper rules-text">
+                <h2 class="rules-title">Objective:</h3>
+                    <p class="rules-paragraph">To collect as many seeds in your store as possible. The player with the
+                        most
+                        seeds in
+                        his/her store at the end of the game wins.</p>
+
+                    <h2 class="rules-title">Set Up:</h3>
+                        <p class="rules-paragraph"> Place four seeds in each of the six pits on your side of the game
+                            board.
+                            Your
+                            opponent
+                            should do the same. The colors of the seeds don’t matter. (For a shorter game, you can play
+                            with
+                            three seeds in each pit.)</p>
+
+                        <h2 class="rules-title">Playing:</h3>
+
+                            <h3 class="rules-subtitle">Basic Rules:</h4>
+                                <ul>
+                                    <li class="rules-paragraph">Play always moves around the board in a
+                                        counter-clockwise circle
+                                        (to
+                                        the right)</li>
+                                    <li class="rules-paragraph">The store on your right belongs to you. That is where
+                                        you keep
+                                        the
+                                        seeds you win.</li>
+                                    <li class="rules-paragraph">The six pits near you are your pits.</li>
+                                    <li class="rules-paragraph">Only use one hand to pick up and put down seeds.</li>
+                                    <li class="rules-paragraph">Once you touch the seeds in a pit, you must move those
+                                        seeds.
+                                    </li>
+                                    <li class="rules-paragraph">Only put seeds in your own store, not your opponent’s
+                                        store.
+                                    </li>
+                                </ul>
+
+
+                                <h3 class="rules-subtitle">Starting the Game:</h3>
+                                <p class="rules-paragraph">On a turn, a player picks up all the seeds in one pit and
+                                    “sows” them
+                                    to
+                                    the right, placing one
+                                    seed in each of the pits along the way. If you come to your store, then add a seed
+                                    to your
+                                    store
+                                    and continue. You may end up putting seeds in your opponent’s pits along the way.
+                                </p>
+
+                                <p class="rules-paragraph">Play alternates back and forth, with opponents picking up the
+                                    seeds
+                                    in
+                                    one of their pits and
+                                    distributing them one at a time into the pits on the right, beginning in the pit
+                                    immediately
+                                    to
+                                    the
+                                    right.</p>
+
+                                <h3 class="rules-subtitle">Special Rules:</h3>
+                                <ul>
+                                    <li class="rules-paragraph">When the last seed in your hand lands in your store,
+                                        take
+                                        another
+                                        turn.</li>
+                                    <li class="rules-paragraph">When the last seed in your hand lands in one of your own
+                                        pits,
+                                        if
+                                        that pit had been empty you
+                                        get to keep all of the seeds in your opponents pit on the opposite side. Put
+                                        those
+                                        captured
+                                        seeds,
+                                        as well as the last seed that you just played on your side, into the store.</li>
+                                </ul>
+
+                                <h2 class="rules-title">Ending the Game:</h2>
+                                <p class="rules-paragraph">The game is over when one player’s pits are completely empty.
+                                    The
+                                    other
+                                    player takes the seeds
+                                    remaining in her pits and puts those seeds in her store. Count up the seeds. Whoever
+                                    has the
+                                    most
+                                    seeds wins.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="full-pop-up-container ldb-container">
+        <div class="background-overlay background-ldb"></div>
+        <div class="pop-up-container ldb">
+            <a href="#" class="close close-ldb"></a>
+            <h2 class="pop-up-main-title">Leaderboard</h2>
+            <div class="pop-up-wrapper">
+                <table class="ldb-content">
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="full-pop-up-container signin-container">
+        <div class="background-overlay background-signin"></div>
+        <div class="pop-up-container">
+            <a href="#" class="close close-signin"></a>
+
+            <div id="profile" class="profile">
+                <h2 id="profile-nickname"></h2>
+                <div class="profile-buttons-container">
+                    <!--<button type="menu" class="submit-button button">Change Password</button>-->
+                    <button id="logout-button" type="submit" class="close-button button">Terminate Session</button>
+                </div>
+            </div>
+            <div id="signin" class="signin">
+                <div class="signin-component login-component">
+                    <h2 class="pop-up-main-title">Log-In</h2>
+                    <form id="login-form" class="signin-input login-input">
+                        <div class="signin-uname-pwd">
+                            <label class="custom-field">
+                                <input id="username-login" type="text" required />
+                                <label for="username-login" class="placeholder">Username</label>
+                            </label>
+                            <label class="custom-field">
+                                <input id="password-login" type="password" required />
+                                <label for="password-login" class="placeholder">Password</label>
+                            </label>
+                        </div>
+                        <div class="signin-buttons-container">
+                            <button type="submit" class="submit-button button">Come on
+                                in!</button>
+                        </div>
+                    </form>
+                    <small id="wrong-password-login" class="error-message"></small>
+                </div>
+                <div class="signin-filler"></div>
+                <div class="signin-component signup-component">
+                    <h2 class="pop-up-main-title">Sign-Up</h2>
+                    <form id="signup-form" class="signin-input signup-input">
+                        <div class="signin-uname-pwd">
+                            <label class="custom-field">
+                                <input id="username-signup" type="text" required />
+                                <label for="username-signup" class="placeholder">Username</label>
+                            </label>
+                            <label class="custom-field">
+                                <input id="password-signup" type="password" required />
+                                <label for="password-signup" class="placeholder">Password</label>
+                            </label>
+                        </div>
+                        <div class="signin-buttons-container">
+                            <button type="submit" class="submit-button button">Come on in!</button>
+                        </div>
+                    </form>
+                    <small id="wrong-password-signup" class="error-message"></small>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="game-area">
+        <div class="board-area inactive">
+            <h1>No game is currently being played.</h1>
+        </div>
+        <form id="game-start-form" class="config-area">
+            <div class="config-area">
+                <div id="pre-game-configs">
+                    <div class="configs">
+                        <h2>Configurations</h2>
+                        <div class="num-cavity-wrapper">
+                            <label class="custom-field configs-fields">
+                                <input id="num-cavities" type="text" required />
+                                <label for="num-cavities" class="placeholder">Number of Cavities</label>
+                            </label>
+                        </div>
+                        <div class="num-init-seeds-wrapper">
+                            <label class="custom-field configs-fields">
+                                <input id="num-init-seeds" type="text" required />
+                                <label for="num-init-seeds" class="placeholder">Number of Initial Seeds</label>
+                            </label>
+                        </div>
+                        <div class="game-type-wrapper">
+                            <label for="game-type">Play Against:</label>
+                            <div id="game-type">
+                                <input id="computer-check" type="radio" id="computer-type" name="game-type"
+                                    value="computer-type">
+                                <label for="computer-type">Computer</label><br>
+                                <input id="person-check" type="radio" id="person-type" name="game-type"
+                                    value="person-type">
+                                <label for="person-type">Another Person</label><br>
+                            </div>
+                        </div>
+
+                        <div id="game-code" class="game-code-wrapper">
+                            <label class="custom-field configs-fields">
+                                <input id="game-code" type="text" />
+                                <label for="game-code" class="placeholder odd-behaviour" id="game-code">Group
+                                    Code</label>
+                            </label>
+                        </div>
+
+                        <div id="ai-level" class="ai-level-wrapper">
+                            <label class="custom-field">
+                                <label for="ai-level">AI Level:</label>
+                                <select name="ai-level" id="ai-level">
+                                    <option value="very-easy">Very Easy</option>
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                    <option value="very-hard">Very Hard</option>
+                                    <option value="godlike">Godlike</option>
+                                </select>
+                            </label>
+                        </div>
+                        <small id="wrong-form-params" class="error-message"></small>
+
+
+                        <!--<div class="game-turn-wrapper">
+                        <label for="game-turn">First Turn:</label>
+                        <div id="game-turn">
+                            <input type="radio" id="you-turn" name="game-turn" value="you-turn">
+                            <label for="you-turn">You</label><br>
+                            <input type="radio" id="adversary-turn" name="game-turn" value="adversary-turn">
+                            <label for="adversary-turn">Adversary</label><br>
+                        </div>
+                    </div>-->
+                    </div>
+                    <div class="start-button-wrapper">
+                        <button id="game-start-button" type="submit" class="start-button button">Start the
+                            Game!</button>
+                    </div>
+                </div>
+                <div id="in-game-summary" class="configs">
+                    <div class="summary">
+                        <h2>Summary</h2>
+                        <h3 id="p1-name">Player1</h3>
+                        <h4 id="p1-points">45 Points</h4>
+                        <h3 id="p2-name">Player 2</h3>
+                        <h4 id="p2-points">33 Points</h4>
+                    </div>
+                    <small id="wrong-form-params-summary" class="error-message"></small>
+                    <div class="end-button-wrapper">
+                        <button id="game-leave-button" type="button" class="close-button button leave-button">Leave the
+                            Game!</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="message-area">
+            <div class="message-box">
+                <h1 class="message-title">Messages</h1>
+                <div id="messages" class="messages">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
