@@ -10,6 +10,7 @@
     <script src="requests.js" defer></script>
     <script src="auxiliar.js" defer></script>
     <script src="eventListeners.js" defer></script>
+    <script src="canvas.js" defer></script>
     <script src="game.js" defer></script>
     <title>Mancala</title>
 </head>
@@ -140,7 +141,7 @@
             <div class="ldb-pop-up-wrapper">
                 <table class="ldb-content" id="sv-leaderboard">
                 </table>
-                <table class="ldb-local-content" id="local-leaderboard">
+                <table class="ldb-local-content" id="local-leaderboard" style="display: none;">
                 </table>
             </div>
         </div>
@@ -187,7 +188,7 @@
 
     <div class="game-area">
         <div class="board-area inactive">
-            <h1>No game is currently being played.</h1>
+            <canvas id="loadingAnim"></canvas>
         </div>
         <form id="game-start-form" class="config-area">
             <div class="config-area">

@@ -454,9 +454,6 @@ select {
     color: var(--main-text-color);
 }
 
-.ldb-local-content table {
-    display: none;
-}
 
 .change-ldb-button-wrapper {
     display: flex;

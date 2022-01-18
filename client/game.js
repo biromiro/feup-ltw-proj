@@ -578,7 +578,11 @@ function processLeaderboard(container, data) {
                     <th>Games</th>
                     <th>Victories</th>
                     </tr>`
-    console.log(data, container);
+
+    if(!data || !data.ranking) {
+        container.innerHTML = `<h2 class="align-center">You haven't played any games.</h2>`
+        return;
+    }
 
     container.innerHTML = header;
 
@@ -771,14 +775,15 @@ function returnWinner(isAI, winner) {
 
         const gameArea = document.getElementsByClassName('board-area')[0];
         clearInnerContent(gameArea);
+        gameArea.innerHTML = "<canvas id=\"loadingAnim\"></canvas>";
         if (isAI) {
-            if (winner == null) gameArea.innerHTML = "<h1>There was a tie!</h1>"
-            else if (winner == Player.Player1) gameArea.innerHTML = `<h1>You won! Congratulations${activeSession.nick ? ', ' + activeSession.nick : ''}!</h1>`
-            else gameArea.innerHTML = `<h1>You lost! Bots are tough, aren't they?</h1>`
+            if (winner == null) gameArea.innerHTML = animateCanvas("There was a tie!");
+            else if (winner == Player.Player1) animateCanvas(`You won! Congratulations${activeSession.nick ? ', ' + activeSession.nick : ''}`);
+            else gameArea.innerHTML = animateCanvas("You lost! Bots are tough, aren't they?");
         } else {
-            if (winner == null) gameArea.innerHTML = "<h1>There was a tie!</h1>"
-            else if (winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations, ${winner}!</h1>`
-            else gameArea.innerHTML = `<h1>You lost. ${winner} wins!</h1>`
+            if (winner == null) gameArea.innerHTML =  animateCanvas("There was a tie!");
+            else if (winner == activeSession.nick) gameArea.innerHTML = animateCanvas(`You won! Congratulations, ${winner}!`);
+            else gameArea.innerHTML = animateCanvas(`You lost. ${winner} wins!</h1>`);
         }
     }, 1000);
     setTimeout(() => {
@@ -820,7 +825,8 @@ function waiting() {
 
     const gameArea = document.getElementsByClassName('board-area')[0];
     clearInnerContent(gameArea);
-    gameArea.innerHTML = "<h1>Waiting for another player to join...</h1>"
+    gameArea.innerHTML = "<canvas id=\"loadingAnim\"></canvas>";
+    animateCanvas("Waiting for another player to join");
 }
 
 function startGame(params) {
@@ -875,7 +881,8 @@ function endGame() {
 
     const gameArea = document.getElementsByClassName('board-area')[0];
     clearInnerContent(gameArea);
-    gameArea.innerHTML = "<h1>No game is currently being played.</h1>"
+    gameArea.innerHTML = "<canvas id=\"loadingAnim\"></canvas>";
+    animateCanvas("No game is currently being played");
 
     clearInnerContent(messages);
 }

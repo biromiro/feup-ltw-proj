@@ -1,5 +1,5 @@
 
-let serverURL = 'http://twserver.alunos.dcc.fc.up.pt:8961/'
+let serverURL = 'http://localhost:8000/'
 
 function POSTRequest(body, path) {
     let options = {
