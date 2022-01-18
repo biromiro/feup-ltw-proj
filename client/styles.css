@@ -159,7 +159,7 @@ select {
 }
 
 .logo-img {
-    width: 6rem;
+    width: 3.5rem;
 }
 
 .toggle-button {
@@ -224,6 +224,14 @@ select {
     overflow: auto;
     height: 85vh;
 
+}
+
+@media (max-width: 700px) {
+    .game-area {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 }
 
 .board-area {
@@ -416,6 +424,16 @@ select {
     height: 75%;
 }
 
+.ldb-pop-up-wrapper {
+    border: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0% 5%;
+    width: 92%;
+    padding: 2%;
+    height: 60%;
+}
+
 .rules-body,
 .rules-text,
 .rules-title,
@@ -424,11 +442,31 @@ select {
     background-color: var(--main-bg-color);
 }
 
-.ldb-content {
+.align-center {
+    text-align: center;
+}
+
+.ldb-content,
+.ldb-local-content {
     width: 100%;
     height: 100%;
     margin: 0;
     color: var(--main-text-color);
+}
+
+.ldb-local-content table {
+    display: none;
+}
+
+.change-ldb-button-wrapper {
+    display: flex;
+    justify-content: center;
+    font-size: 0.8em;
+}
+
+.change-ldb-button {
+    background-color: var(--main-color);
+    color: white;
 }
 
 table td {
@@ -649,6 +687,8 @@ table th {
         width: 100%;
         margin: 0%;
         width: 100%;
+        z-index: 2;
+        background-color: var(--main-bg-color);
     }
 
     .navbar {

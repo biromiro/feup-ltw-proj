@@ -170,7 +170,6 @@ class Board
         if((sowableCavitiesP1.length == 0 && player == Player.Player1) || 
            (sowableCavitiesP2.length == 0 && player == Player.Player2)) {
                this.collectSeeds(sowableCavitiesP1, sowableCavitiesP2);
-               console.log('seedsCollected');
                return SowOutcome.GameOver;
         }
 
@@ -179,11 +178,11 @@ class Board
 
     collectSeeds(sowableCavitiesP1, sowableCavitiesP2) {
         sowableCavitiesP1.forEach(cavity => {
-            this.move(cavity.length, cavity, this.cavities[this.nCavities]);
+            this.move(cavity.seeds.length, cavity, this.cavities[this.nCavities]);
         });
 
         sowableCavitiesP2.forEach(cavity => {
-            this.move(cavity.length, cavity, this.cavities[this.nCavities * 2 + 1]);
+            this.move(cavity.seeds.length, cavity, this.cavities[this.cavities.length - 1]);
         });
     }
 }

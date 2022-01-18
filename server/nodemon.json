@@ -1,0 +1,8 @@
+{
+  "watch": [
+    "index.js",
+    "game.js",
+    "requestHandler.js"
+  ],
+  "ext": "js"
+}

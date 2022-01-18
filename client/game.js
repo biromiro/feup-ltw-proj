@@ -225,8 +225,6 @@ class Board
             this.move(1, sourceCavity, targetCavity);
         }
 
-        if(this.body) this.updateDisplay();
-
         if (targetCavity.player() == sourceCavity.player() && targetCavity.isStorage())
             return SowOutcome.PlayAgain;
         
@@ -241,7 +239,6 @@ class Board
             let toMove = this.cavities[this.nCavities*2 - cavityIdx];
             this.move(toMove.seeds.length, toMove, storage);
         }
-        if(this.body) this.updateDisplay();
     }
 
     getAIBestOutcome(player)
@@ -324,6 +321,7 @@ class Board
            (sowableCavitiesP2.length == 0 && player == Player.Player2)) {
                this.collectSeeds(sowableCavitiesP1, sowableCavitiesP2);
                const p1 = this.getPoints(Player.Player1), p2 = this.getPoints(Player.Player2);
+               console.log(p1, p2);
                returnWinner(true, p1 == p2 ? null : (p1 > p2 ? Player.Player1 : Player.Player2));
                return true;
         }
@@ -363,13 +361,9 @@ class Cavity
         this.seeds.forEach( (seed) => {
             if (seed.wasChanged)
             {
-                seed.element.remove();
+                seed.element.remove(seed);
                 seed.calcDisplay();
-                setTimeout( () => {
-                    seed.genDisplay();
-                    animationCounter -= 500;
-                }, animationCounter);
-                animationCounter += 500;
+                seed.genDisplay();
             }
         });
         this.updateScore();
@@ -560,44 +554,57 @@ function changeNicknames(adversary) {
     adversaryName.innerText = adversary ? adversary : 'Computer';
 }
 
-async function getLeaderboard(container) {
+async function getLeaderboard(localLdb, serverLdb) {
 
     const ranking = POSTRequest({}, 'ranking');
     ranking.then(function (data) {
         if (data.error) return handleError(data);
-        let header = `<tr>
-                        <th>Username</th>
-                        <th>Games</th>
-                        <th>Victories</th>
-                      </tr>`
-
-        container.innerHTML = header;
-
-        let ranking = data.ranking;
-
-        for (let [index, player] of ranking.entries()) {
-
-            let style = "";
-
-            switch (index) {
-                case 0:
-                    style = "gold";
-                    break;
-                case 1:
-                    style = "silver";
-                    break;
-                case 2:
-                    style = "#CD7F32";
-            }
-
-            container.innerHTML += `<tr>
-                                        <td>${player.nick}</td>
-                                        <td>${player.games}</td>
-                                        <td style="background-color:${style};">${player.victories}</td>
-                                        </tr>`
-        }
+        console.log(data);
+        processLeaderboard(serverLdb, data);
     })
 
+    if (typeof(Storage) !== "undefined") {
+        const data = JSON.parse(localStorage.getItem("leaderboard"));
+        processLeaderboard(localLdb, data);
+    } else {
+        localLdb.innerHTML = `<h2 class="align-center">Your browser does not support WebStorage.</h2>`
+    }
+
+}
+
+function processLeaderboard(container, data) {
+    let header = `<tr>
+                    <th>Username</th>
+                    <th>Games</th>
+                    <th>Victories</th>
+                    </tr>`
+    console.log(data, container);
+
+    container.innerHTML = header;
+
+    let ranking = data.ranking;
+
+    for (let [index, player] of ranking.entries()) {
+
+        let style = "";
+
+        switch (index) {
+            case 0:
+                style = "gold";
+                break;
+            case 1:
+                style = "silver";
+                break;
+            case 2:
+                style = "#CD7F32";
+        }
+
+        container.innerHTML += `<tr>
+                                    <td>${player.nick}</td>
+                                    <td>${player.games}</td>
+                                    <td style="background-color:${style};">${player.victories}</td>
+                                    </tr>`
+    }
 }
 
 let signInContainer = document.getElementById('signin');
@@ -708,25 +715,72 @@ async function join(gameStartForm, gameStartErrorMessage) {
     });
 }
 
-function returnWinner(isAI, winner) {
-    preGameContainer.style.display = 'flex';
-    preGameContainer.style += "flex-direction: column;"
-    inGameContainer.style.display = 'none';
+function updateLocalLeaderboard(won) {
+    console.log("heyo");
+    if (typeof(Storage) !== "undefined") {
+        let data = {}
+        let leaderboard = localStorage.getItem("leaderboard");
 
-    const gameArea = document.getElementsByClassName('board-area')[0];
-    clearInnerContent(gameArea);
-    if (isAI) {
-        if (winner == null) gameArea.innerHTML = "<h1>There was a tie!</h1>"
-        else if (winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations${activeSession.nick ? ', ' + activeSession.nick : ''}!</h1>`
-        else gameArea.innerHTML = `<h1>You lost! Bots are tough, aren't they?</h1>`
-    } else {
-        if (winner == null) gameArea.innerHTML = "<h1>There was a tie!</h1>"
-        else if (winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations, ${winner}!</h1>`
-        else gameArea.innerHTML = `<h1>You lost. ${winner} wins!</h1>`
+        if(leaderboard) leaderboard = JSON.parse(leaderboard).data;
+        else leaderboard = {};
+
+        let nickname = activeSession.nick != "" ? activeSession.nick : "This PC";
+
+        let score = {};
+        if(leaderboard && leaderboard[nickname]) {
+            score = leaderboard[nickname];
+
+            if(won) score.victories += 1;
+
+            score.games += 1;
+        } else {
+            score = {nick: nickname, games: 1, victories: won ? 1 : 0}
+        }
+
+        leaderboard[nickname] = score;
+
+        data.data = leaderboard;
+        data.ranking = [];
+        
+        for (const key in leaderboard) {
+            data.ranking.push(leaderboard[key]);
+        }
+
+        data.ranking = data.ranking.sort((val1, val2) => {
+            return val2.victories == val1.victories ?
+            val1.games - val2.games :
+            val2.victories - val1.victories
+        });
+
+        console.log(data);
+        localStorage.setItem("leaderboard", JSON.stringify(data));
     }
+}
+
+function returnWinner(isAI, winner) {
+    if(isAI) updateLocalLeaderboard(winner == Player.Player1); 
+    else stopUpdates();
 
     currentGame = {};
-    if(!isAI) stopUpdates();
+
+
+    setTimeout( () => {
+        preGameContainer.style.display = 'flex';
+        preGameContainer.style += "flex-direction: column;"
+        inGameContainer.style.display = 'none';
+
+        const gameArea = document.getElementsByClassName('board-area')[0];
+        clearInnerContent(gameArea);
+        if (isAI) {
+            if (winner == null) gameArea.innerHTML = "<h1>There was a tie!</h1>"
+            else if (winner == Player.Player1) gameArea.innerHTML = `<h1>You won! Congratulations${activeSession.nick ? ', ' + activeSession.nick : ''}!</h1>`
+            else gameArea.innerHTML = `<h1>You lost! Bots are tough, aren't they?</h1>`
+        } else {
+            if (winner == null) gameArea.innerHTML = "<h1>There was a tie!</h1>"
+            else if (winner == activeSession.nick) gameArea.innerHTML = `<h1>You won! Congratulations, ${winner}!</h1>`
+            else gameArea.innerHTML = `<h1>You lost. ${winner} wins!</h1>`
+        }
+    }, 1000);
     setTimeout(() => {
         endGame();
     }, 5000);

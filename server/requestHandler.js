@@ -326,6 +326,8 @@ function notify(res, data) {
 
         if (result == 'GameOver') {
             sendUpdateEvent(runningGame, {"finished": true});
+            delete runningGames[game];
+            return sendResponse(res, 200, JSON.stringify({}));
         }
 
         if (result != 'PlayAgain') runningGame.turn = runningGame.board.getOppositePlayer(nickname);

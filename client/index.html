@@ -134,11 +134,17 @@
         <div class="pop-up-container ldb">
             <a href="#" class="close close-ldb"></a>
             <h2 class="pop-up-main-title">Leaderboard</h2>
-            <div class="pop-up-wrapper">
-                <table class="ldb-content">
+            <div class="change-ldb-button-wrapper">
+                <button class="button change-ldb-button" id="switch-ldb">Show Local Leadeboard</button>
+            </div>
+            <div class="ldb-pop-up-wrapper">
+                <table class="ldb-content" id="sv-leaderboard">
+                </table>
+                <table class="ldb-local-content" id="local-leaderboard">
                 </table>
             </div>
         </div>
+    </div>
     </div>
 
     <div class="full-pop-up-container signin-container">
@@ -173,26 +179,6 @@
                         </div>
                     </form>
                     <small id="wrong-password-login" class="error-message"></small>
-                </div>
-                <div class="signin-filler"></div>
-                <div class="signin-component signup-component">
-                    <h2 class="pop-up-main-title">Sign-Up</h2>
-                    <form id="signup-form" class="signin-input signup-input">
-                        <div class="signin-uname-pwd">
-                            <label class="custom-field">
-                                <input id="username-signup" type="text" required />
-                                <label for="username-signup" class="placeholder">Username</label>
-                            </label>
-                            <label class="custom-field">
-                                <input id="password-signup" type="password" required />
-                                <label for="password-signup" class="placeholder">Password</label>
-                            </label>
-                        </div>
-                        <div class="signin-buttons-container">
-                            <button type="submit" class="submit-button button">Come on in!</button>
-                        </div>
-                    </form>
-                    <small id="wrong-password-signup" class="error-message"></small>
                 </div>
             </div>
         </div>

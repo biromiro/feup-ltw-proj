@@ -32,12 +32,14 @@ const ldbButton = document.getElementsByClassName('ldb-button')[0]
 const backgroundLdb = document.getElementsByClassName('background-ldb')[0]
 const closeLdb = document.getElementsByClassName('close-ldb')[0]
 const ldbContainer = document.getElementsByClassName('ldb-container')[0]
-const ldbContent = document.getElementsByClassName('ldb-content')[0]
 const ldb = document.getElementsByClassName('ldb')[0]
+const swapLdb = document.getElementById('switch-ldb');
+const localLdb = document.getElementById('local-leaderboard');
+const serverLdb = document.getElementById('sv-leaderboard');
 
 ldbButton.addEventListener('click', () => {
 
-    getLeaderboard(ldbContent).then(() => {
+    getLeaderboard(localLdb, serverLdb).then(() => {
         ldbContainer.classList.toggle('active')
         ldb.classList.toggle('active')
     });
@@ -54,6 +56,21 @@ backgroundLdb.addEventListener('click', () => {
     ldbContainer.classList.toggle('active')
     ldb.classList.toggle('active')
 });
+
+swapLdb.addEventListener('click', () => {
+
+    console.log(localLdb.style.display, serverLdb.style.display);
+
+    if(serverLdb.style.display === "") {
+        localLdb.style.display = ""
+        serverLdb.style.display = "none"
+        swapLdb.innerHTML = "Show Server Leaderboard"
+    } else {
+        serverLdb.style.display = ""
+        localLdb.style.display = "none"
+        swapLdb.innerHTML = "Show Local Leaderboard"
+    }
+})
 
 const signinButton = document.getElementsByClassName('signin-button')[0]
 const backgroundSignin = document.getElementsByClassName('background-signin')[0]
@@ -85,17 +102,6 @@ loginForm.addEventListener('submit', (event) => {
     event.stopImmediatePropagation();
     login(loginForm, loginErrorMessage).then(() => {
         loginForm.reset();
-    });
-});
-
-const signupForm = document.getElementById('signup-form');
-const signupErrorMessage = document.getElementById('wrong-password-signup');
-
-signupForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    register(signupForm, signupErrorMessage).then(() => {
-        signupForm.reset();
     });
 });
 
