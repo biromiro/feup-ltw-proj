@@ -55,6 +55,6 @@ let server = http.createServer(function (req, res) {
     } else handle.unknownRequest(req, res);
 });
 
-server.listen(8961);
+server.listen(8000);
 
 console.log('Node.js web server at port 8961 is running..')

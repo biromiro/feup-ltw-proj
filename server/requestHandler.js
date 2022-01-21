@@ -126,6 +126,8 @@ function genBoardResponseJSON(game, endGame) {
     res['stores'][game.players[0]] = p1.store;
     res['stores'][game.players[1]] = p2.store;
 
+    console.log(endGame);
+
     if (endGame.finished) {
         res['winner'] = p1.store == p2.store ? null :
                  (p1.store > p2.store ? game.players[0] : game.players[1]);
@@ -320,7 +322,7 @@ function notify(res, data) {
         const cavityToPlay = runningGame.board.cavities[cavity];
 
         const result = runningGame.board.turn(cavityToPlay, nickname);
-
+        console.log(result);
         if (result == 'EmptySourceCavity') return error(res, 400, 'Cavity is currently empty')
         else if (result == 'InvalidSourceCavity') return error(res, 400, 'No such cavity');
 

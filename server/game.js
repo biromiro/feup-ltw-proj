@@ -157,10 +157,10 @@ class Board
     turn(sourceCavity, player)
     {
         let result = this.sow(sourceCavity, player);
-
+        
         if (result == SowOutcome.PlayAgain){
             return this.checkEndGame(player, result);
-        } else this.checkEndGame(player == Player.Player1 ? Player.Player2 : Player.Player1, result);
+        } else return this.checkEndGame(player == Player.Player1 ? Player.Player2 : Player.Player1, result);
     }
 
     checkEndGame(player, result) {
