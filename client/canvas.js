@@ -1,6 +1,6 @@
-function animateCanvas(message) {
-    let particleArray = [];
+let particleArray = [];
 
+function animateCanvas(message) {
     class Particle {
         constructor(moveRadius, step, position, size) {
             this.moveRadius = moveRadius;
@@ -8,6 +8,7 @@ function animateCanvas(message) {
             this.position = position;
             this.size = size;
             this.curStep = this.step;
+            this.accelerate = false;
         }
     
         draw(ctx, canvas) {
@@ -23,26 +24,33 @@ function animateCanvas(message) {
         update(ctx, canvas) {
             this.position += this.curStep;
             this.draw(ctx, canvas);
-            if(this.curStep > this.step) this.curStep -= 0.00005;
+            if(!this.accelerate && this.curStep > this.step) {
+                this.curStep -= 0.05*this.curStep;
+            }
+            if(this.curStep < this.step) this.curStep = this.step;
         }
     }
     
     const canvas = document.getElementById('loadingAnim');
+    console.log(canvas);
     const ctx = canvas.getContext("2d");
     canvas.width = innerWidth/2;
     canvas.height = innerHeight/2;
     
-    function init() {
-    
-        particleArray = [];
-    
-        for(let i=0; i < 500; i++) {
-            let moveRadius = Math.random() * canvas.width;
-            let step = (Math.random()*0.002) + 0.002;
-            let position = Math.random() * (Math.PI*2);
-            let size = (Math.random() * 12) + 0.5;
-    
-            particleArray.push(new Particle(moveRadius, step, position, size));
+    function init(windowChange) {
+        
+        if(windowChange || particleArray.length == 0) {
+
+            particleArray = [];
+
+            for(let i=0; i < 500; i++) {
+                let moveRadius = Math.random() * canvas.width;
+                let step = (Math.random()*0.002) + 0.002;
+                let position = Math.random() * (Math.PI*2);
+                let size = (Math.random() * 12) + 0.5;
+        
+                particleArray.push(new Particle(moveRadius, step, position, size));
+            }
         }
     }
     
@@ -55,7 +63,7 @@ function animateCanvas(message) {
         }
         ctx.font = "2em Alegreya";
         ctx.fillStyle = `rgb(79, 56, 36)`;
-        ctx.fillText(message, parseInt(innerWidth/4) - 220, parseInt(innerHeight/4));
+        ctx.fillText(message, parseInt(innerWidth/4) - message.length*6.5, parseInt(innerHeight/4));
     }
     
     function handleMouseUp() {
@@ -72,7 +80,7 @@ function animateCanvas(message) {
     
     function handleMouseMove() {
         particleArray.forEach(particle => {
-            particle.curStep += 0.0001;
+            particle.curStep += 0.0005;
         });
     }
     
@@ -88,6 +96,13 @@ function animateCanvas(message) {
         });
     }
     
+    function handleAcceleration(accelerate) {
+        particleArray.forEach(particle => {
+            particle.accelerate = accelerate;
+        });
+    }
+
+
     init();
     animate();
     
@@ -95,7 +110,7 @@ function animateCanvas(message) {
         if(canvas) {
             canvas.width = innerWidth/2;
             canvas.height = innerHeight/2;
-            init();
+            init(true);
         }
     })
     
@@ -110,6 +125,7 @@ function animateCanvas(message) {
     
     canvas.addEventListener("mousemove", () => {
         handleMouseMove();
+        handleAcceleration(true);
     })
     
     canvas.addEventListener("mouseenter", ()  => {
@@ -118,6 +134,7 @@ function animateCanvas(message) {
     
     canvas.addEventListener("mouseleave", ()  => {
         handleMouseLeave();
+        handleAcceleration(false);
     })
 }
 

@@ -774,21 +774,22 @@ function returnWinner(isAI, winner) {
         inGameContainer.style.display = 'none';
 
         const gameArea = document.getElementsByClassName('board-area')[0];
+        console.log(gameArea);
         clearInnerContent(gameArea);
         gameArea.innerHTML = "<canvas id=\"loadingAnim\"></canvas>";
         if (isAI) {
-            if (winner == null) gameArea.innerHTML = animateCanvas("There was a tie!");
-            else if (winner == Player.Player1) animateCanvas(`You won! Congratulations${activeSession.nick ? ', ' + activeSession.nick : ''}`);
-            else gameArea.innerHTML = animateCanvas("You lost! Bots are tough, aren't they?");
+            if (winner == null) animateCanvas("There was a tie!");
+            else if (winner == Player.Player1) animateCanvas(`You won! Congratulations${activeSession.nick ? ', ' + activeSession.nick : ''}!`);
+            else animateCanvas("You lost! Bots are tough, aren't they?");
         } else {
-            if (winner == null) gameArea.innerHTML =  animateCanvas("There was a tie!");
-            else if (winner == activeSession.nick) gameArea.innerHTML = animateCanvas(`You won! Congratulations, ${winner}!`);
-            else gameArea.innerHTML = animateCanvas(`You lost. ${winner} wins!</h1>`);
+            if (winner == null) animateCanvas("There was a tie!");
+            else if (winner == activeSession.nick) animateCanvas(`You won! Congratulations, ${winner}!`);
+            else animateCanvas(`You lost. ${winner} wins!</h1>`);
         }
     }, 1000);
     setTimeout(() => {
         endGame();
-    }, 5000);
+    }, 10000);
 }
 
 function setUpdateResponse(params) {
