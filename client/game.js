@@ -800,6 +800,11 @@ function setUpdateResponse(params) {
 
         let data = JSON.parse(event.data);
 
+        if(!data.board){
+            endGame();
+            return stopUpdates();
+        }
+
         if (!currentGame.board) startGame(params);
         if (data.winner || data.winner === null) return returnWinner(false, data.winner);
 
@@ -822,14 +827,18 @@ function setUpdateResponse(params) {
 
 
 function waiting() {
-    preGameContainer.style.display = 'flex';
-    preGameContainer.style += "flex-direction: column;"
-    inGameContainer.style.display = 'none';
+    preGameContainer.style.display = 'none';
+    inGameContainer.style.display = 'flex';
 
     const gameArea = document.getElementsByClassName('board-area')[0];
     clearInnerContent(gameArea);
     gameArea.innerHTML = "<canvas id=\"loadingAnim\"></canvas>";
     animateCanvas("Waiting for another player to join");
+
+    document.getElementById('p1-points').innerText = 0;
+    document.getElementById('p2-points').innerText = 0;
+
+    changeNicknames('Opponent');
 }
 
 function startGame(params) {
@@ -876,16 +885,17 @@ function stopUpdates() {
 }
 
 function endGame() {
-    console.log("game end");
+
+    const gameArea = document.getElementsByClassName('board-area')[0];
+    clearInnerContent(gameArea);
+
+    gameArea.innerHTML = "<canvas id=\"loadingAnim\"></canvas>";
+    animateCanvas("No game is currently being played");
+
 
     preGameContainer.style.display = 'flex';
     preGameContainer.style += "flex-direction: column;"
     inGameContainer.style.display = 'none';
-
-    const gameArea = document.getElementsByClassName('board-area')[0];
-    clearInnerContent(gameArea);
-    gameArea.innerHTML = "<canvas id=\"loadingAnim\"></canvas>";
-    animateCanvas("No game is currently being played");
 
     clearInnerContent(messages);
 }

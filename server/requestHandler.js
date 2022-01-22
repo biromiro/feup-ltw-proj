@@ -9,6 +9,7 @@ const {
 let waitingGames = {}
 let runningGames = {}
 
+
 function sendResponse(res, code, content) {
     res.writeHead(code, {
         'Content-Type': 'application/json',
@@ -134,7 +135,7 @@ function updateLeaderboard(winner, loser) {
 }
 
 function genBoardResponseJSON(game, endGame) {
-    const res = {
+    let res = {
         'board': {
             'turn': '',
             'sides': {}
@@ -169,12 +170,14 @@ function genBoardResponseJSON(game, endGame) {
     res['stores'][game.players[0]] = p1.store;
     res['stores'][game.players[1]] = p2.store;
 
+    winner =  p1.store == p2.store ? null :
+    (p1.store > p2.store ? game.players[0] : game.players[1]);
+    loser = winner == game.players[0] ? game.players[1] : game.players[0];
+
     if (endGame.finished) {
-        const winner =  p1.store == p2.store ? null :
-        (p1.store > p2.store ? game.players[0] : game.players[1]);
-        const loser = winner == game.players[0] ? game.players[1] : game.players[0];
         res['winner'] = winner;
         updateLeaderboard(winner, loser);
+
     }
     else if (endGame.left) 
         res['winner'] = endGame.left == game.players[0] ? game.players[1] : game.players[0];
@@ -183,6 +186,11 @@ function genBoardResponseJSON(game, endGame) {
 }
 
 function sendUpdateEvent(game, endGame) {
+    if(game == undefined) {
+        endGame.write(`data: ${JSON.stringify({"winner": null})}\n\n`);
+        return;
+    }
+
     for(let key in game.responses){
         game.responses[key].write(`data: ${JSON.stringify(genBoardResponseJSON(game, endGame))}\n\n`);
     }
@@ -242,14 +250,15 @@ function register(res, data) {
 
 function join(res, data) {
     const info = JSON.parse(data);
-    
+    let waiting = true;
+
     const group = info['group'];
     const nickname = info['nick'];
     const password = info['password'];
     let size = info['size'];
     let initial = info['initial'];
 
-    if (!nickname || !password || isNaN(size) || isNaN(initial) || (isNaN(group) && group))
+    if (!nickname || !password || isNaN(size) || isNaN(initial))
         return errorInBody(res);
 
     if (!checkPassword(res, nickname, password)) return;
@@ -270,7 +279,12 @@ function join(res, data) {
                 'players': [savedGame.nickname, nickname],
                 'turn': savedGame.nickname,
                 'numCavities': parseInt(size),
-                'responses': {}
+                'responses': {},
+                'timeout': setTimeout(() => {
+                    const game = runningGames[savedGameHash];
+                    sendUpdateEvent(game,{"left": game.turn});
+                    delete runningGames[savedGameHash];
+                }, 120000),
             }
 
             gameBoard.responses[savedGame.nickname] = savedGame.response;
@@ -278,8 +292,6 @@ function join(res, data) {
             runningGames[savedGameHash] = gameBoard;
 
             delete waitingGames[gameString];
-
-            let waiting = true;
 
             let interval = setInterval(() => {
                 if (runningGames[savedGameHash].responses[savedGame.nickname] &&
@@ -289,11 +301,6 @@ function join(res, data) {
                     sendUpdateEvent(runningGames[savedGameHash], {});
                 }
             }, 100);
-
-            let timeout = setTimeout(() => {
-                if(waiting) return;
-            }, 2000);
-
 
         }
 
@@ -315,6 +322,15 @@ function join(res, data) {
         'game': savedGameHash
     });
 
+    setTimeout(() => {
+        if(waiting) {
+            const res = waitingGames[gameString]?.response;
+            if(res) sendUpdateEvent(undefined, waitingGames[gameString].response);
+            delete waitingGames[gameString];
+        }
+    }, 120000);
+
+
     sendResponse(res, 200, json);
 
 }
@@ -330,9 +346,10 @@ function leave(res, data) {
         return errorInBody(res);
 
     if (!checkPassword(res, nickname, password)) return;
-
     for (let key in waitingGames) {
-        if (key['hash'] == game) {
+        console.log(waitingGames[key], game);
+        if (waitingGames[key].hash == game) {
+            sendUpdateEvent(undefined, waitingGames[key].response);
             delete waitingGames[key];
             return sendResponse(res, 200, JSON.stringify({}));
         }
@@ -369,10 +386,12 @@ function notify(res, data) {
     if (runningGame && runningGame.players.includes(nickname)) {
         if (runningGame.turn != nickname) return error(res, 400, 'Not your turn to play');
 
+        runningGame.timeout.refresh();
+
         if (runningGame.players[1] == nickname) cavity += runningGame.numCavities + 1;
 
         if (cavity >= runningGame.board.cavities.length) return error(res, 400, 'No such cavity')
-
+        
         const cavityToPlay = runningGame.board.cavities[cavity];
 
         const result = runningGame.board.turn(cavityToPlay, nickname);
