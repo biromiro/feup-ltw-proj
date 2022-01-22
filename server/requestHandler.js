@@ -91,7 +91,7 @@ function checkPassword(res, nickname, password) {
     return true;
 }
 
-function updateLeaderboard(winner, loser) {
+function updateLeaderboard(winner, loser, tie) {
     fs.readFile('db/ranking.json', (err, file) => {
         if (err) {
             console.log("Error while updating leaderboard: ", err);
@@ -102,7 +102,7 @@ function updateLeaderboard(winner, loser) {
         for(let j = 0; j < ranking.length; j++) {
             if(ranking[j].nick == winner) {
                 foundWinner = true;
-                ranking[j].victories += 1;
+                tie ? '' : ranking[j].victories += 1 ;
                 ranking[j].games += 1;
             } else if (ranking[j].nick == loser) {
                 foundLoser = true;
@@ -111,7 +111,7 @@ function updateLeaderboard(winner, loser) {
         }
 
         if(!foundWinner) {
-            const winnerEntry = {"nick" : winner, "victories": 1, "games": 1};
+            const winnerEntry = {"nick" : winner, "victories": tie ? 0 : 1, "games": 1};
             ranking.push(winnerEntry);
         }
 
@@ -176,7 +176,9 @@ function genBoardResponseJSON(game, endGame) {
 
     if (endGame.finished) {
         res['winner'] = winner;
-        updateLeaderboard(winner, loser);
+        if(winner == null)
+            updateLeaderboard(game.players[0], game.players[1], true);
+        else updateLeaderboard(winner, loser, false);
 
     }
     else if (endGame.left) 
@@ -282,9 +284,11 @@ function join(res, data) {
                 'responses': {},
                 'timeout': setTimeout(() => {
                     const game = runningGames[savedGameHash];
-                    sendUpdateEvent(game,{"left": game.turn});
-                    delete runningGames[savedGameHash];
-                }, 120000),
+                    if(game) {
+                        sendUpdateEvent(game,{"left": game.turn});
+                        delete runningGames[savedGameHash];
+                    }
+                }, 5000),
             }
 
             gameBoard.responses[savedGame.nickname] = savedGame.response;

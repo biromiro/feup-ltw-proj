@@ -569,6 +569,12 @@ table th {
         color 0.3s ease;
 }
 
+.game-type-wrapper,
+.game-turn-wrapper {
+    width: 50%;
+    text-align: center;
+}
+
 .configs-fields .placeholder {
     top: 0px;
 }
@@ -812,7 +818,8 @@ table th {
 }
 
 .game-code-wrapper,
-.ai-level-wrapper {
+.ai-level-wrapper,
+.game-turn-wrapper {
     display: none;
 }
 

@@ -126,7 +126,7 @@ gameStartForm.addEventListener('submit', (event) => {
     }
 
     if (isAIGameType()) {
-        startGame(formParams);
+        startGame({ turn: isPlayerTurn(), ...formParams });
         changeNicknames();
     } else if (isPVPGameType()) {
         join(formParams, gameStartErrorMessage);

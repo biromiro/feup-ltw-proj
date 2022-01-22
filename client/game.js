@@ -18,13 +18,15 @@ function range(start, end) {
 
 class Board
 {
-    constructor(body, nCavities, nSeeds, AILevel)
+    constructor(body, nCavities, nSeeds, AILevel, turn)
     {
         this.body = body;
 
         this.cavities = [];
         
         this.nCavities = nCavities;
+
+        this.playerTurn = turn;
 
         const depths = new Map();
         depths.set('very-easy', 0);
@@ -91,8 +93,8 @@ class Board
                 this.put(newSeedNum - cavity.seeds.length, movedSeeds, cavity);
         }
 
-        if(boardInfo.turn == player) newMessage({message: `It's your turn.`})
-        else newMessage({message: `It's ${boardInfo.turn} turn.`})
+        if(boardInfo.turn == player) newMessage({"message": `It's your turn.`})
+        else newMessage({"message": `It's ${boardInfo.turn} turn.`})
 
         this.updateDisplay();
     }
@@ -295,22 +297,40 @@ class Board
             this.turnAI();
         }
         
-        return this.checkEndGame(Player.Player2);
+        return this.checkEndGame(Player.Player1);
     }
 
     turn(sourceCavity)
     {
-        let result = this.sow(sourceCavity, Player.Player1);
+        if(!this.playerTurn) {
+            return newMessage({"error": `Wait it out! The bot is thinking...`})
+        }
 
-        if (result == SowOutcome.PlayAgain)
-            return this.checkEndGame(Player.Player1);
-        else this.checkEndGame(Player.Player2);
+        let result = this.sow(sourceCavity, Player.Player1);
+        
+        if (result == SowOutcome.PlayAgain){
+            if(!this.checkEndGame(Player.Player1))
+                newMessage({"message": `It's your turn.`})
+            return;
+        }
+        else if (this.checkEndGame(Player.Player2)) return;
+
+        if(result == SowOutcome.InvalidSourceCavity || result == SowOutcome.EmptySourceCavity) {
+            return newMessage({"error": `This cavity is empty/is invalid!`})
+        }
 
         if (this.AIDepth != null){
-            this.turnAI();
+            console.log("hello?");
+            newMessage({"message": `It's the computer's turn.`})
+            setTimeout(() => {
+                this.turnAI();
+                this.playerTurn = true;
+                this.updateDisplay();
+                return newMessage({"message": `It's your turn.`})
+            }, 1000);
         }
-        else
-            alert('Other player is playing...');
+
+        this.playerTurn = false;
     }
 
     checkEndGame(player) {
@@ -515,6 +535,7 @@ function getCookie(name) {
 
 let messages = document.getElementById('messages');
 let getUpdates = undefined;
+let leaveTimeout = undefined;
 
 let playerName = document.getElementById('p1-name');
 let adversaryName = document.getElementById('p2-name');
@@ -767,31 +788,54 @@ function returnWinner(isAI, winner) {
     if(isAI) updateLocalLeaderboard(winner == Player.Player1); 
     else stopUpdates();
 
+    currentGame.board.updateDisplay();
+    
     currentGame = {};
 
-
     setTimeout( () => {
-        preGameContainer.style.display = 'flex';
-        preGameContainer.style += "flex-direction: column;"
-        inGameContainer.style.display = 'none';
-
         const gameArea = document.getElementsByClassName('board-area')[0];
         console.log(gameArea);
         clearInnerContent(gameArea);
         gameArea.innerHTML = "<canvas id=\"loadingAnim\"></canvas>";
         if (isAI) {
-            if (winner == null) animateCanvas("There was a tie!");
-            else if (winner == Player.Player1) animateCanvas(`You won! Congratulations${activeSession.nick ? ', ' + activeSession.nick : ''}!`);
-            else animateCanvas("You lost! Bots are tough, aren't they?");
+            if (winner == null) {
+                const message = "There was a tie!";
+                animateCanvas(message);
+                newMessage({"message": message})
+            }
+            else if (winner == Player.Player1) {
+                const message = `You won! Congratulations${activeSession.nick ? ', ' + activeSession.nick : ''}!`;
+                animateCanvas(message);
+                newMessage({"message": message})
+            }
+            else {
+                const message = "You lost! Bots are tough, aren't they?";
+                animateCanvas(message);
+                newMessage({"message": message})
+            } 
         } else {
-            if (winner == null) animateCanvas("There was a tie!");
-            else if (winner == activeSession.nick) animateCanvas(`You won! Congratulations, ${winner}!`);
-            else animateCanvas(`You lost. ${winner} wins!`);
+            if (winner == null) {
+                const message = "There was a tie!";
+                animateCanvas(message);
+                newMessage({"message": message})
+            }
+            else if (winner == activeSession.nick) {
+                const message = `You won! Congratulations, ${winner}!`;
+                animateCanvas(message);
+                newMessage({"message": message})
+            }
+            else {
+                const message = `You lost. ${winner} wins!`;
+                animateCanvas(message);
+                newMessage({"message": message})
+            } 
         }
+
+        leaveTimeout = setTimeout(function() {
+            endGame();
+        }, 4000);
+
     }, 1000);
-    setTimeout(() => {
-        endGame();
-    }, 10000);
 }
 
 function setUpdateResponse(params) {
@@ -806,9 +850,10 @@ function setUpdateResponse(params) {
         }
 
         if (!currentGame.board) startGame(params);
-        if (data.winner || data.winner === null) return returnWinner(false, data.winner);
 
         currentGame.board.update(data.board, activeSession.nick);
+
+        if (data.winner || data.winner === null) return returnWinner(false, data.winner);
 
         if (!currentGame.adversary) {
             Object.keys(data.board.sides).forEach((key) => {
@@ -848,9 +893,25 @@ function startGame(params) {
     const gameArea = document.getElementsByClassName('board-area')[0];
     clearInnerContent(gameArea);
     console.log(`New Board with: ${params.size} cavities per side and ${params.initial} seeds per cavity.`)
-    currentGame.board = new Board(gameArea, parseInt(params.size), parseInt(params.initial), params.AILevel);
+    currentGame.board = new Board(gameArea, parseInt(params.size), parseInt(params.initial), params.AILevel, params.turn);
+
+    if(params.AILevel) setupFirstTurn();
 
     currentGame.board.genDisplay();
+}
+
+function setupFirstTurn() {
+    if(params.turn)
+        newMessage({"message": `It's your turn.`});
+    else {
+        newMessage({"message": `It's the Computer's turn.`});
+        setTimeout( () => {
+            currentGame.board.turnAI();
+            currentGame.board.playerTurn = true;
+            currentGame.board.updateDisplay();
+            return newMessage({"message": `It's your turn.`})
+        }, 1000);
+    }
 }
 
 async function leave(gameLeaveErrorMessage) {
@@ -858,7 +919,8 @@ async function leave(gameLeaveErrorMessage) {
     if (!activeSession.valid) return handleError({
         error: 'You should be logged in - please reload the page.'
     }, gameLeaveErrorMessage);
-    console.log("left the game");
+
+    if(leaveTimeout) endGame();
 
     let params = {
         'nick': activeSession.nick,
@@ -886,6 +948,11 @@ function stopUpdates() {
 
 function endGame() {
 
+    if(leaveTimeout) {
+        clearTimeout(leaveTimeout);
+        leaveTimeout = undefined;
+    }
+    
     const gameArea = document.getElementsByClassName('board-area')[0];
     clearInnerContent(gameArea);
 
