@@ -90,6 +90,49 @@ function checkPassword(res, nickname, password) {
     return true;
 }
 
+function updateLeaderboard(winner, loser) {
+    fs.readFile('db/ranking.json', (err, file) => {
+        if (err) {
+            console.log("Error while updating leaderboard: ", err);
+        }
+        let ranking = JSON.parse(file).ranking;
+        let foundWinner = false, foundLoser = false;
+        
+        for(let j = 0; j < ranking.length; j++) {
+            if(ranking[j].nick == winner) {
+                foundWinner = true;
+                ranking[j].victories += 1;
+                ranking[j].games += 1;
+            } else if (ranking[j].nick == loser) {
+                foundLoser = true;
+                ranking[j].games += 1;
+            }
+        }
+
+        if(!foundWinner) {
+            const winnerEntry = {"nick" : winner, "victories": 1, "games": 1};
+            ranking.push(winnerEntry);
+        }
+
+        if(!foundLoser) {
+            const loserEntry = {"nick": loser, "victories": 0, "games": 1}
+            ranking.push(loserEntry);
+        }
+
+        ranking = ranking.sort((val1, val2) => {
+            return val2.victories == val1.victories ?
+            val1.games - val2.games :
+            val2.victories - val1.victories
+        });
+
+        rankingObj = {"ranking" : ranking};
+        
+        fs.writeFile("db/ranking.json", JSON.stringify(rankingObj), 'utf8', err => {
+            if (err) console.log("Error while saving the updated leaderboard");
+        });
+    });
+}
+
 function genBoardResponseJSON(game, endGame) {
     const res = {
         'board': {
@@ -126,11 +169,12 @@ function genBoardResponseJSON(game, endGame) {
     res['stores'][game.players[0]] = p1.store;
     res['stores'][game.players[1]] = p2.store;
 
-    console.log(endGame);
-
     if (endGame.finished) {
-        res['winner'] = p1.store == p2.store ? null :
-                 (p1.store > p2.store ? game.players[0] : game.players[1]);
+        const winner =  p1.store == p2.store ? null :
+        (p1.store > p2.store ? game.players[0] : game.players[1]);
+        const loser = winner == game.players[0] ? game.players[1] : game.players[0];
+        res['winner'] = winner;
+        updateLeaderboard(winner, loser);
     }
     else if (endGame.left) 
         res['winner'] = endGame.left == game.players[0] ? game.players[1] : game.players[0];
@@ -149,8 +193,8 @@ function ranking(res) {
         if (err) {
             return error(res, 500, 'could not fetch rankings');
         }
-        const student = JSON.parse(file);
-        sendResponse(res, 200, JSON.stringify(student));
+        const ranking = JSON.parse(file);
+        sendResponse(res, 200, JSON.stringify(ranking));
     });
 }
 

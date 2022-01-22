@@ -784,7 +784,7 @@ function returnWinner(isAI, winner) {
         } else {
             if (winner == null) animateCanvas("There was a tie!");
             else if (winner == activeSession.nick) animateCanvas(`You won! Congratulations, ${winner}!`);
-            else animateCanvas(`You lost. ${winner} wins!</h1>`);
+            else animateCanvas(`You lost. ${winner} wins!`);
         }
     }, 1000);
     setTimeout(() => {

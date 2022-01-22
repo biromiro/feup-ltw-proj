@@ -1,12 +1,24 @@
 const handle = require('./requestHandler.js');
+const staticPage = require('./staticPage.js');
 const http = require('http')
-const url = require('url')
+const URL = require('url')
+
+const staticPageRegex = /^\/(img\/)?.+\.[a-zA-Z]+/;
 
 let server = http.createServer(function (req, res) {
 
-    let receivedURL = url.parse(req.url, true);
+    let receivedURL = URL.parse(req.url, true);
 
-    if (receivedURL.pathname == '/ranking') {
+    if(receivedURL.pathname.match(staticPageRegex)) {
+        staticPage.requestHandler(res, res, receivedURL.pathname);
+    }
+
+    else if(receivedURL.pathname == '/') {
+        if (req.method != 'GET') return handle.unknownRequest(req, res);
+        staticPage.requestHandler(res, res, '/index.html');
+    }
+
+    else if (receivedURL.pathname == '/ranking') {
         if (req.method != 'POST') return handle.unknownRequest(req, res);
         handle.ranking(res);
 
@@ -55,6 +67,6 @@ let server = http.createServer(function (req, res) {
     } else handle.unknownRequest(req, res);
 });
 
-server.listen(8000);
+server.listen(8961);
 
 console.log('Node.js web server at port 8961 is running..')
