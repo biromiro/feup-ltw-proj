@@ -603,6 +603,8 @@ function processLeaderboard(container, data) {
                 style = "#CD7F32";
         }
 
+        if(index >= 10) break;
+
         container.innerHTML += `<tr>
                                     <td>${player.nick}</td>
                                     <td>${player.games}</td>
