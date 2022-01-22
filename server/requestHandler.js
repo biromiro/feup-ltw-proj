@@ -126,7 +126,7 @@ function updateLeaderboard(winner, loser) {
         });
 
         rankingObj = {"ranking" : ranking};
-        
+
         fs.writeFile("db/ranking.json", JSON.stringify(rankingObj), 'utf8', err => {
             if (err) console.log("Error while saving the updated leaderboard");
         });
@@ -194,6 +194,9 @@ function ranking(res) {
             return error(res, 500, 'could not fetch rankings');
         }
         const ranking = JSON.parse(file);
+        console.log(ranking.ranking);
+        ranking.ranking = ranking.ranking.splice(0, 10);
+        console.log(ranking);
         sendResponse(res, 200, JSON.stringify(ranking));
     });
 }
@@ -276,13 +279,20 @@ function join(res, data) {
 
             delete waitingGames[gameString];
 
-            let timeout = setInterval(() => {
+            let waiting = true;
+
+            let interval = setInterval(() => {
                 if (runningGames[savedGameHash].responses[savedGame.nickname] &&
                     runningGames[savedGameHash].responses[nickname]) {
-                    clearInterval(timeout);
+                    clearInterval(interval);
+                    waiting = false;
                     sendUpdateEvent(runningGames[savedGameHash], {});
                 }
             }, 100);
+
+            let timeout = setTimeout(() => {
+                if(waiting) return;
+            }, 2000);
 
 
         }

@@ -1,1 +1,19 @@
-{"ranking":[{"nick":"joaobaltazoiro","victories":2,"games":2},{"nick":"biromiro","victories":2,"games":5},{"nick":"kaylmao","victories":1,"games":3}]}
+{
+    "ranking": [
+        {
+            "nick": "joaobaltazoiro",
+            "victories": 2,
+            "games": 2
+        },
+        {
+            "nick": "biromiro",
+            "victories": 2,
+            "games": 5
+        },
+        {
+            "nick": "kaylmao",
+            "victories": 1,
+            "games": 3
+        }
+    ]
+}
