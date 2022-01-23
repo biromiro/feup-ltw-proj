@@ -121,8 +121,8 @@ gameStartForm.addEventListener('submit', (event) => {
     let formParams = {
         'size': gameStartForm['num-cavities'].value,
         'initial': gameStartForm['num-init-seeds'].value,
-        'group': gameStartForm['game-code'].value,
-        'AILevel': gameStartForm['ai-level'].value
+        'group': gameStartForm['game-code-val'].value,
+        'AILevel': gameStartForm['ai-level-val'].value
     }
 
     if (isAIGameType()) {

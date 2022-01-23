@@ -576,7 +576,7 @@ table th {
 }
 
 .configs-fields .placeholder {
-    top: 0px;
+    top: 15px;
 }
 
 .custom-field input:focus,
@@ -600,7 +600,7 @@ table th {
 .configs-fields input:valid+.placeholder,
 .configs-fields select:focus+.placeholder,
 .configs-fields select:valid+.placeholder {
-    top: -22px;
+    top: -10px;
     font-size: 0.8rem;
     color: var(--main-text-color);
 }
@@ -821,6 +821,11 @@ table th {
 .ai-level-wrapper,
 .game-turn-wrapper {
     display: none;
+}
+
+.ai-level-custom-field {
+    display: flex;
+    align-items: center;
 }
 
 .error-message {

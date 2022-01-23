@@ -284,20 +284,30 @@ class Board
 
     turnAI()
     {
-        let bestOutcome = this.getAIBestOutcome(Player.Player2);
+        setTimeout(() => {
+            let bestOutcome = this.getAIBestOutcome(Player.Player2);
 
-        console.log(bestOutcome);
+            let result = this.sow(this.cavities.at(bestOutcome.cavity), Player.Player2);
 
-        let result = this.sow(this.cavities.at(bestOutcome.cavity), Player.Player2);
+            if (result == SowOutcome.PlayAgain)
+            {
+                if(this.checkEndGame(Player.Player2)) return;
+                newMessage({"message": `It's the computer's turn.`})
+                this.updateDisplay();
+                return setTimeout(() => {
+                    return this.turnAI();
+                }, 1000);
+            }
 
-        if (result == SowOutcome.PlayAgain)
-        {
-            console.log('Playing again!');
-            if(this.checkEndGame(Player.Player2)) return;
-            this.turnAI();
-        }
+            this.playerTurn = true;
+
+            this.updateDisplay();
+
+            if(!this.checkEndGame(Player.Player1))
+                newMessage({"message": `It's your turn.`})
+                
+        }, 1000);
         
-        return this.checkEndGame(Player.Player1);
     }
 
     turn(sourceCavity)
@@ -320,14 +330,8 @@ class Board
         }
 
         if (this.AIDepth != null){
-            console.log("hello?");
             newMessage({"message": `It's the computer's turn.`})
-            setTimeout(() => {
-                this.turnAI();
-                this.playerTurn = true;
-                this.updateDisplay();
-                return newMessage({"message": `It's your turn.`})
-            }, 1000);
+            this.turnAI();
         }
 
         this.playerTurn = false;
@@ -339,10 +343,12 @@ class Board
 
         if((sowableCavitiesP1.length == 0 && player == Player.Player1) || 
            (sowableCavitiesP2.length == 0 && player == Player.Player2)) {
+
                this.collectSeeds(sowableCavitiesP1, sowableCavitiesP2);
                const p1 = this.getPoints(Player.Player1), p2 = this.getPoints(Player.Player2);
-               console.log(p1, p2);
-               returnWinner(true, p1 == p2 ? null : (p1 > p2 ? Player.Player1 : Player.Player2));
+               setTimeout(() => {
+                returnWinner(true, p1 == p2 ? null : (p1 > p2 ? Player.Player1 : Player.Player2));
+               }, 1000);
                return true;
         }
 
@@ -479,7 +485,7 @@ class Seed
         const xOffset = width / 8;
         const yOffset = height / 8;
         const x = Math.random() * width*1.5 + xOffset;
-        const y = Math.random() * height*1.5 + yOffset;
+        const y = Math.random() * height*1.3 + yOffset;
         const degs = Math.random() * 360;
         const scaleX = 0.005 * xProportion;
         const scaleY = 0.006 * yProportion;
@@ -895,22 +901,17 @@ function startGame(params) {
     console.log(`New Board with: ${params.size} cavities per side and ${params.initial} seeds per cavity.`)
     currentGame.board = new Board(gameArea, parseInt(params.size), parseInt(params.initial), params.AILevel, params.turn);
 
-    if(params.AILevel) setupFirstTurn();
+    if(params.AILevel) setupFirstTurn(params.turn);
 
     currentGame.board.genDisplay();
 }
 
-function setupFirstTurn() {
-    if(params.turn)
+function setupFirstTurn(turn) {
+    if(turn)
         newMessage({"message": `It's your turn.`});
     else {
         newMessage({"message": `It's the Computer's turn.`});
-        setTimeout( () => {
-            currentGame.board.turnAI();
-            currentGame.board.playerTurn = true;
-            currentGame.board.updateDisplay();
-            return newMessage({"message": `It's your turn.`})
-        }, 1000);
+        currentGame.board.turnAI();
     }
 }
 
