@@ -397,10 +397,8 @@ class Cavity
 
     updateScore() {
         if(this.isStorage() && this.player() == Player.Player1) {
-            console.log(this.element);
             document.getElementById('p1-points').innerText = this.element.childElementCount;
         } else if (this.isStorage() && this.player() == Player.Player2) {
-            console.log(this.element);
             document.getElementById('p2-points').innerText = this.element.childElementCount;
         }
     }
@@ -586,7 +584,6 @@ async function getLeaderboard(localLdb, serverLdb) {
     const ranking = POSTRequest({}, 'ranking');
     ranking.then(function (data) {
         if (data.error) return handleError(data);
-        console.log(data);
         processLeaderboard(serverLdb, data);
     })
 
@@ -743,13 +740,10 @@ async function join(gameStartForm, gameStartErrorMessage) {
         setUpdateResponse(params);
 
         waiting();
-
-        console.log(`${activeSession.nick} joined the game ${currentGame.gameCode}, which has ${gameStartForm.size} cavities, with ${gameStartForm.initial} cavities each.`);
     });
 }
 
 function updateLocalLeaderboard(won) {
-    console.log("heyo");
     if (typeof(Storage) !== "undefined") {
         let data = {}
         let leaderboard = localStorage.getItem("leaderboard");
@@ -785,7 +779,6 @@ function updateLocalLeaderboard(won) {
             val2.victories - val1.victories
         });
 
-        console.log(data);
         localStorage.setItem("leaderboard", JSON.stringify(data));
     }
 }
@@ -800,7 +793,6 @@ function returnWinner(isAI, winner) {
 
     setTimeout( () => {
         const gameArea = document.getElementsByClassName('board-area')[0];
-        console.log(gameArea);
         clearInnerContent(gameArea);
         gameArea.innerHTML = "<canvas id=\"loadingAnim\"></canvas>";
         if (isAI) {
@@ -846,8 +838,6 @@ function returnWinner(isAI, winner) {
 
 function setUpdateResponse(params) {
     getUpdates.onmessage = (event) => {
-        console.log(event.data);
-
         let data = JSON.parse(event.data);
 
         if(!data.board){
@@ -898,7 +888,6 @@ function startGame(params) {
 
     const gameArea = document.getElementsByClassName('board-area')[0];
     clearInnerContent(gameArea);
-    console.log(`New Board with: ${params.size} cavities per side and ${params.initial} seeds per cavity.`)
     currentGame.board = new Board(gameArea, parseInt(params.size), parseInt(params.initial), params.AILevel, params.turn);
 
     if(params.AILevel) setupFirstTurn(params.turn);
@@ -936,14 +925,11 @@ async function leave(gameLeaveErrorMessage) {
 
         currentGame = {};
 
-        console.log("left the game");
-
         endGame();
     });
 }
 
 function stopUpdates() {
-    console.log("closed");
     getUpdates.close();
 }
 

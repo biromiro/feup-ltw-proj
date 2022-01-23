@@ -58,9 +58,6 @@ backgroundLdb.addEventListener('click', () => {
 });
 
 swapLdb.addEventListener('click', () => {
-
-    console.log(localLdb.style.display, serverLdb.style.display);
-
     if(serverLdb.style.display === "") {
         localLdb.style.display = ""
         serverLdb.style.display = "none"
@@ -154,3 +151,21 @@ errorMessages.forEach(message => {
         }, 5000);
     });
 });
+
+const playButton = document.getElementById('play-button');
+const pauseButton = document.getElementById('pause-button');
+
+pauseButton.style.display = "none";
+
+playButton.addEventListener('click', () => {
+    pauseButton.style.display = "block";
+    playButton.style.display = "none";
+    playBackgroundMusic();
+})
+
+pauseButton.addEventListener('click', () => {
+    playButton.style.display = "block";
+    pauseButton.style.display = "none";
+    stopBackgroundMusic();
+})
+

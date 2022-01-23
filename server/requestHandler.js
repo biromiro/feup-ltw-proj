@@ -204,9 +204,7 @@ function ranking(res) {
             return error(res, 500, 'could not fetch rankings');
         }
         const ranking = JSON.parse(file);
-        console.log(ranking.ranking);
         ranking.ranking = ranking.ranking.splice(0, 10);
-        console.log(ranking);
         sendResponse(res, 200, JSON.stringify(ranking));
     });
 }
@@ -351,7 +349,6 @@ function leave(res, data) {
 
     if (!checkPassword(res, nickname, password)) return;
     for (let key in waitingGames) {
-        console.log(waitingGames[key], game);
         if (waitingGames[key].hash == game) {
             sendUpdateEvent(undefined, waitingGames[key].response);
             delete waitingGames[key];
@@ -399,7 +396,6 @@ function notify(res, data) {
         const cavityToPlay = runningGame.board.cavities[cavity];
 
         const result = runningGame.board.turn(cavityToPlay, nickname);
-        console.log(result);
         if (result == 'EmptySourceCavity') return error(res, 400, 'Cavity is currently empty')
         else if (result == 'InvalidSourceCavity') return error(res, 400, 'No such cavity');
 

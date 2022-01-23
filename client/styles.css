@@ -226,14 +226,6 @@ select {
 
 }
 
-@media (max-width: 700px) {
-    .game-area {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-}
-
 .board-area {
     grid-area: Board;
 }
@@ -246,7 +238,8 @@ select {
 }
 
 .config-area {
-
+    margin-right: 8%;
+    margin-top: 8%;
     grid-area: Configs;
 }
 
@@ -680,93 +673,16 @@ table th {
     margin: 1rem;
 }
 
-@media (max-width: 600px) {
-    .toggle-button {
-        display: flex;
-    }
-
-    .navbar-links {
-        display: none;
-        width: 100%;
-        margin: 0%;
-        width: 100%;
-        z-index: 2;
-        background-color: var(--main-bg-color);
-    }
-
-    .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .navbar-links ul {
-        width: 100%;
-        flex-direction: column;
-    }
-
-    .navbar-links li {
-        text-align: center;
-        border-radius: 0%;
-    }
-
-    .navbar-links li a {
-        padding: .5rem 1rem;
-    }
-
-    .navbar-links.active {
-        display: flex;
-        animation: slidein 0.5s ease forwards;
-    }
-
-    @keyframes slidein {
-        from {
-            margin-left: 100%;
-            width: 300%;
-        }
-
-        to {
-            margin-left: 0%;
-            width: 100%;
-        }
-    }
-
-    .pop-up-container {
-        left: 10%;
-        width: 80%;
-    }
-}
-
-@media (max-width: 750px) {
-    .signin {
-        display: flex;
-        flex-flow: wrap;
-        align-content: center;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .signin-input {
-        padding-bottom: 0;
-    }
-
-    .signin-filler {
-        width: 80%;
-        height: 2px;
-        margin: 5%;
-    }
-}
-
 .configs,
 .summary {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-right: 8%;
-    margin-top: 8%;
     background-color: var(--main-bg-color);
     padding: 5%;
     border-radius: 50px;
+    width: 100%;
 }
 
 #in-game-summary {
@@ -778,15 +694,14 @@ table th {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5% 8% 5% 5%;
 }
 
 .end-button-wrapper {
-    width: 50%;
+    width: 80%;
 }
 
 .start-button {
-    padding: 2em;
+    padding: 1em;
     background: var(--main-bg-color);
 }
 
@@ -832,4 +747,143 @@ table th {
     display: block;
     color: red;
     animation: fadeout 5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.modal-audio {
+    color: var(--main-bg-color);
+    position: fixed;
+    bottom: 3em;
+    right: 3em;
+    height: fit-content;
+    width: fit-content;
+}
+
+.modal-audio:hover {
+    color: var(--whitened-bg-color);
+    cursor: pointer;
+}
+
+
+@media (max-width: 1000px) {
+    .toggle-button {
+        display: flex;
+    }
+
+    .config-area {
+        margin: 0;
+    }
+
+    .navbar-links {
+        display: none;
+        width: 100%;
+        margin: 0%;
+        z-index: 2;
+        background-color: var(--main-bg-color);
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        height: fit-content;
+    }
+
+    .board {
+        width: 95vw;
+        height: 25vh;
+    }
+
+    .navbar-links ul {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .navbar-links li {
+        text-align: center;
+        border-radius: 0%;
+    }
+
+    .navbar-links li a {
+        padding: .5rem 1rem;
+    }
+
+    .navbar-links.active {
+        display: flex;
+        animation: slidein 0.5s ease forwards;
+    }
+
+    @keyframes slidein {
+        from {
+            margin-left: 100%;
+            width: 300%;
+        }
+
+        to {
+            margin-left: 0%;
+            width: 100%;
+        }
+    }
+
+    .pop-up-container {
+        left: 10%;
+        width: 80%;
+    }
+
+    .signin {
+        display: flex;
+        flex-flow: wrap;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .signin-input {
+        padding-bottom: 0;
+    }
+
+    .signin-filler {
+        width: 80%;
+        height: 2px;
+        margin: 5%;
+    }
+
+    .game-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .pre-game-configs-wrapper,
+    .configs {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 1em 0em;
+        width: 80vw;
+    }
+
+    .start-button-wrapper {
+        width: 20em;
+        height: fit-content;
+        margin: 0;
+    }
+
+    .message-box {
+        width: 20em;
+        margin: 1em 0em;
+    }
+
+    .board-area.inactive {
+        margin: 0;
+    }
+
+    .modal-audio {
+        top: 2em;
+        left: 8em;
+        color: var(--main-color);
+    }
+
+    .modal-audio:hover {
+        color: var(--alt-bg-color);
+    }
 }

@@ -32,9 +32,10 @@ function animateCanvas(message) {
     }
     
     const canvas = document.getElementById('loadingAnim');
-    console.log(canvas);
     const ctx = canvas.getContext("2d");
-    canvas.width = innerWidth/2;
+    if(innerWidth/2 > 500)
+        canvas.width = innerWidth/2;
+    else canvas.width = innerWidth - 50;
     canvas.height = innerHeight/2;
     
     function init(windowChange) {
@@ -63,7 +64,11 @@ function animateCanvas(message) {
         }
         ctx.font = "2em Alegreya";
         ctx.fillStyle = `rgb(79, 56, 36)`;
-        ctx.fillText(message, parseInt(innerWidth/4) - message.length*6.5, parseInt(innerHeight/4));
+        if(canvas.width < 500) {
+            ctx.fillText(message.substring(0, message.length/2), parseInt(canvas.width/2), parseInt(innerHeight/4));
+            ctx.fillText(message.substring(message.length/2), parseInt(canvas.width/2), parseInt(innerHeight/4) + 50);
+        } else ctx.fillText(message, parseInt(canvas.width/2), parseInt(innerHeight/4));
+        ctx.textAlign = "center"; 
     }
     
     function handleMouseUp() {
@@ -108,8 +113,11 @@ function animateCanvas(message) {
     
     window.addEventListener("resize", () => {
         if(canvas) {
-            canvas.width = innerWidth/2;
+            if(innerWidth/2 > 500)
+                canvas.width = innerWidth/2;
+            else canvas.width = innerWidth - 50;
             canvas.height = innerHeight/2;
+            console.log('canvas width:', canvas.width)
             init(true);
         }
     })
